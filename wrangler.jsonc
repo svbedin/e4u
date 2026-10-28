@@ -31,7 +31,7 @@
   "vars": {
     "ACCOUNT_ID": "c9210d5116f321db52ab7181ba07abe5",
     "ACCESS_TEAM": "calm-voice-b665.cloudflareaccess.com",
-    "ACCESS_AUD": "",
+    "ACCESS_AUD": "f40c818a98d0d9f05afe04036b7fcd0a73acc766684d2455ba82301367b11b9d",
     "POLICY_NAME": "E4U testers",
     "APP_URL": "https://e4u.slovko.win",
     "MAIL_FROM": "E4U <hello@slovko.win>",
