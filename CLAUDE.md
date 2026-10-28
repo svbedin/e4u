@@ -62,5 +62,5 @@ npm run vapid      ключи напоминаний (запускает вла�
 1. `npm test`; `npm run screens` (только данные — `npm run screens:quick`), снимки просмотреть.
 2. `npm run release`.
 3. `CHANGELOG.md`, версия в `www/js/config.js` и `package.json`.
-4. Коммит на русском, `git push` (когда будет репозиторий на GitHub).
+4. Коммит на русском, `git push` — резервная копия в закрытом репозитории https://github.com/svbedin/e4u.
 5. `npm run deploy`.
