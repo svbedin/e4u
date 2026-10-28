@@ -72,24 +72,6 @@ export function onSave(fn) { listeners.add(fn); return () => listeners.delete(fn
 /** Swap the storage backend (e.g. a cloud adapter after sign-in). */
 export function useAdapter(a) { adapter = a; }
 
-/** The whole profile as the text of a file: to move the progress to another phone or keep a copy (Settings → Progress). */
-export function exportProfile() {
-  return JSON.stringify({ app: 'e4u', saved: new Date().toISOString(), profile });
-}
-
-/** Replaces the profile with the one from a file made by exportProfile(). Throws 'bad' for any other file.
- *  The reminder stays as it is on this device: it belongs to the device (its push subscription), not to the file. */
-export function importProfile(text) {
-  let o = null;
-  try { o = JSON.parse(text); } catch (e) { /* not JSON */ }
-  const p = o && o.app === 'e4u' ? o.profile : null;
-  if (!p || typeof p !== 'object' || p.v !== 2 || !p.sections || typeof p.sections !== 'object') throw new Error('bad');
-  p.remind = profile.remind;
-  adapter.write(p);
-  initStore();
-  save();
-}
-
 /** Asks the browser to keep the profile even when the phone runs out of space (granted silently, or not at all). */
 export function persistStorage() {
   try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) { /* not supported */ }

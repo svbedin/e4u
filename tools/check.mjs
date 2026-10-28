@@ -19,7 +19,7 @@ const bad = (where, what) => problems.push(`${where}: ${what}`);
 // the store reads the profile from localStorage: a memory one here
 const memL = {};
 globalThis.localStorage ??= { getItem: k => memL[k] ?? null, setItem: (k, v) => { memL[k] = v; }, removeItem: k => { delete memL[k]; } };
-const { initStore, getProfile, exportProfile, importProfile, save } = await import('../www/js/core/store.js');
+const { initStore, getProfile } = await import('../www/js/core/store.js');
 initStore();
 const meaning = (where, t) => { for (const l of LANGS) if (!t[l] || !String(t[l]).trim()) bad(where, `нет перевода (${l})`); };
 
@@ -94,20 +94,6 @@ for (const level of ['a1', 'a2']) {
     }
   }
   for (const id of ['verbs', 'nouns']) { const [S, st] = SECTIONS[id]; const m = S.matchSet(st, {}); if (m.pairs.length < 4) bad(`${id} (пары)`, `пар ${m.pairs.length}`); }
-}
-
-// ---- 5. progress file: what is saved comes back the same; another file is refused ----
-{
-  const P = getProfile(), keep = JSON.stringify(P);
-  P.xp = 1234; save();
-  const file = exportProfile();
-  P.xp = 0; save();
-  importProfile(file);
-  if (getProfile().xp !== 1234) bad('файл прогресса', 'после загрузки прогресс не тот, что сохранён');
-  let refused = false;
-  try { importProfile('{"app":"other"}'); } catch (e) { refused = e.message === 'bad'; }
-  if (!refused) bad('файл прогресса', 'чужой файл принят');
-  importProfile(JSON.stringify({ app: 'e4u', profile: JSON.parse(keep) }));
 }
 
 // ---- 6. translations ----

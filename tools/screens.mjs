@@ -59,7 +59,8 @@ try {
   await cdp('Page.addScriptToEvaluateOnNewDocument', { source: `
     window.__spoken = []; window.__voice = [];
     const laura = { lang: 'en-GB', name: 'Kate (test)', voiceURI: 'kate' }, filip = { lang: 'en-US', name: 'Daniel (test)', voiceURI: 'daniel' };
-    const voices = sessionStorage.getItem('novoice') ? [] : sessionStorage.getItem('onevoice') ? [laura] : [laura, filip];
+    const serena = { lang: 'en-GB', name: 'Serena (test)', voiceURI: 'serena' };
+    const voices = sessionStorage.getItem('novoice') ? [] : sessionStorage.getItem('onevoice') ? [laura] : [laura, serena, filip];
     Object.defineProperty(window, 'speechSynthesis', { configurable: true, value: {
       getVoices: () => voices, speak: u => { window.__spoken.push(u.text); window.__voice.push(u.voice && u.voice.name); },
       cancel() {}, addEventListener() {} } });
@@ -130,8 +131,7 @@ try {
     check(`язык ${lang} не выбран`, await js(`document.documentElement.lang`) === lang);
     const p = `${theme}-${lang}-`;
     await shot(p + '01b-settings');
-    check('настройки: блок «Прогресс»', await js(`!!document.querySelector('#progress [data-act="progsave"]')`));
-    check('выбор голоса: два английских голоса', await js(`document.querySelectorAll('[data-act="voice"]').length`) === 2);
+    check('выбор голоса: из трёх голосов показаны два — женский и мужской', await js(`document.querySelectorAll('[data-act="voice"]').length`) === 2);
     await click('[data-act="go"][data-v="home"]'); await shot(p + '01-home');
     check('главная: глаголы, существительные, фразы', await js(`['hub:verbs','hub:nouns','hub:phrases'].every(v => document.querySelector('[data-v="'+v+'"]'))`));
     check('главная: «Тренировка дня» и «Грамматика»', await js(`!!document.querySelector('[data-v="daily:daily"]') && !!document.querySelector('.screen > [data-v="grammar"]')`));
