@@ -35,7 +35,7 @@
     "POLICY_NAME": "E4U testers",
     "APP_URL": "https://e4u.slovko.win",
     "MAIL_FROM": "E4U <hello@slovko.win>",
-    "VAPID_PUBLIC": ""
+    "VAPID_PUBLIC": "BD52QbYpyp1mvCsD6Nej8_r4TMh5rPX-kdBrJYwqnTfqGXTjNWGYh_5Y3FT6M2n9XhXLTwLClyEwEZvEzB8Bp0o"
   },
   "kv_namespaces": [
     { "binding": "TESTERS", "id": "2a30b1f926554e2487374df2486b8865" }
