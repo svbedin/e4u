@@ -7,12 +7,12 @@
 
 ## Первая публикация (делает владелец, один раз)
 
-Все команды — в папке `C:\Users\Sergiy\Documents\E4U` (в Claude Code — с `!` в начале). Вход в Cloudflare уже есть
-(тот же, что для Slovko).
+Все команды — в папке `C:\Users\Sergiy\Documents\E4U`. В Claude Code — с `!` в начале и с переходом в папку прямыми
+косыми чертами: `! cd /c/Users/Sergiy/Documents/E4U && <команда>`. Вход в Cloudflare уже есть (тот же, что для Slovko).
 
 1. **Хранилище тестеров и база:**
    ```
-   npx wrangler kv namespace create TESTERS
+   npx wrangler kv namespace create E4U_TESTERS   (не «TESTERS»: так называется хранилище Slovko)
    npx wrangler d1 create e4u
    ```
    Каждая команда печатает `id` — их нужно вписать в `wrangler.jsonc` вместо `TODO-KV-ID` и `TODO-D1-ID`

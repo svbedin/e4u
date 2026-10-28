@@ -38,10 +38,10 @@
     "VAPID_PUBLIC": ""
   },
   "kv_namespaces": [
-    { "binding": "TESTERS", "id": "TODO-KV-ID" }
+    { "binding": "TESTERS", "id": "2a30b1f926554e2487374df2486b8865" }
   ],
   // tournament: players and rounds (worker/schema.sql)
   "d1_databases": [
-    { "binding": "DB", "database_name": "e4u", "database_id": "TODO-D1-ID" }
+    { "binding": "DB", "database_name": "e4u", "database_id": "63f8ff7f-f4c5-44dc-8ca3-5c9374553c87" }
   ]
 }
