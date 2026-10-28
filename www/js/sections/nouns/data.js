@@ -1,0 +1,150 @@
+/*!
+ * E4U — nouns: data (every form written out)
+ * Copyright (c) 2026 Serg. All rights reserved.
+ *
+ * One row per noun: [singular, plural or '-' (no plural), article a | an (by the first sound), ru, uk, sk, flags]
+ * flags: a = A1 (otherwise A2), i = irregular plural. 'an' goes before a vowel sound (an hour), 'a' before a consonant
+ * sound (a university).
+ */
+const RAW = [
+// people
+['man', 'men', 'a', 'мужчина', 'чоловік', 'muž', 'ai'],
+['woman', 'women', 'a', 'женщина', 'жінка', 'žena', 'ai'],
+['child', 'children', 'a', 'ребёнок', 'дитина', 'dieťa', 'ai'],
+['person', 'people', 'a', 'человек', 'людина', 'človek', 'ai'],
+['boy', 'boys', 'a', 'мальчик', 'хлопчик', 'chlapec', 'a'],
+['girl', 'girls', 'a', 'девочка', 'дівчинка', 'dievča', 'a'],
+['baby', 'babies', 'a', 'младенец', 'немовля', 'bábätko', 'a'],
+['friend', 'friends', 'a', 'друг', 'друг', 'kamarát', 'a'],
+['brother', 'brothers', 'a', 'брат', 'брат', 'brat', 'a'],
+['sister', 'sisters', 'a', 'сестра', 'сестра', 'sestra', 'a'],
+['wife', 'wives', 'a', 'жена', 'дружина', 'manželka', 'ai'],
+['husband', 'husbands', 'a', 'муж', 'чоловік (у шлюбі)', 'manžel', 'a'],
+['family', 'families', 'a', 'семья', 'родина', 'rodina', 'a'],
+['teacher', 'teachers', 'a', 'учитель', 'вчитель', 'učiteľ', 'a'],
+['student', 'students', 'a', 'студент', 'студент', 'študent', 'a'],
+['doctor', 'doctors', 'a', 'врач', 'лікар', 'lekár', 'a'],
+['engineer', 'engineers', 'an', 'инженер', 'інженер', 'inžinier', 'a'],
+['actor', 'actors', 'an', 'актёр', 'актор', 'herec', 'a'],
+['artist', 'artists', 'an', 'художник', 'художник', 'umelec', 'a'],
+['uncle', 'uncles', 'an', 'дядя', 'дядько', 'ujo, strýko', 'a'],
+['aunt', 'aunts', 'an', 'тётя', 'тітка', 'teta', 'a'],
+['neighbour', 'neighbours', 'a', 'сосед', 'сусід', 'sused', 'a'],
+// animals
+['dog', 'dogs', 'a', 'собака', 'собака', 'pes', 'a'],
+['cat', 'cats', 'a', 'кошка', 'кішка', 'mačka', 'a'],
+['horse', 'horses', 'a', 'лошадь', 'кінь', 'kôň', 'a'],
+['mouse', 'mice', 'a', 'мышь', 'миша', 'myš', 'ai'],
+['sheep', 'sheep', 'a', 'овца', 'вівця', 'ovca', 'ai'],
+['fish', 'fish', 'a', 'рыба', 'риба', 'ryba', 'ai'],
+['bird', 'birds', 'a', 'птица', 'птах', 'vták', 'a'],
+['elephant', 'elephants', 'an', 'слон', 'слон', 'slon', 'a'],
+['animal', 'animals', 'an', 'животное', 'тварина', 'zviera', 'a'],
+// the body
+['foot', 'feet', 'a', 'нога (ступня)', 'нога (стопа)', 'chodidlo', 'ai'],
+['tooth', 'teeth', 'a', 'зуб', 'зуб', 'zub', 'ai'],
+['hand', 'hands', 'a', 'рука (кисть)', 'рука (кисть)', 'ruka', 'a'],
+['eye', 'eyes', 'an', 'глаз', 'око', 'oko', 'a'],
+['ear', 'ears', 'an', 'ухо', 'вухо', 'ucho', 'a'],
+['arm', 'arms', 'an', 'рука', 'рука', 'ruka (paža)', 'a'],
+// home
+['house', 'houses', 'a', 'дом', 'будинок', 'dom', 'a'],
+['flat', 'flats', 'a', 'квартира', 'квартира', 'byt', 'a'],
+['room', 'rooms', 'a', 'комната', 'кімната', 'izba', 'a'],
+['kitchen', 'kitchens', 'a', 'кухня', 'кухня', 'kuchyňa', 'a'],
+['door', 'doors', 'a', 'дверь', 'двері', 'dvere', 'a'],
+['window', 'windows', 'a', 'окно', 'вікно', 'okno', 'a'],
+['table', 'tables', 'a', 'стол', 'стіл', 'stôl', 'a'],
+['chair', 'chairs', 'a', 'стул', 'стілець', 'stolička', 'a'],
+['bed', 'beds', 'a', 'кровать', 'ліжко', 'posteľ', 'a'],
+['shelf', 'shelves', 'a', 'полка', 'полиця', 'polica', 'ai'],
+['key', 'keys', 'a', 'ключ', 'ключ', 'kľúč', 'a'],
+['knife', 'knives', 'a', 'нож', 'ніж', 'nôž', 'ai'],
+['box', 'boxes', 'a', 'коробка', 'коробка', 'krabica', 'a'],
+['glass', 'glasses', 'a', 'стакан', 'склянка', 'pohár', 'a'],
+['dish', 'dishes', 'a', 'блюдо; тарелка', 'страва; тарілка', 'jedlo; misa', 'a'],
+['clock', 'clocks', 'a', 'часы (настенные)', 'годинник (настінний)', 'hodiny (nástenné)', 'a'],
+['umbrella', 'umbrellas', 'an', 'зонт', 'парасолька', 'dáždnik', 'a'],
+['oven', 'ovens', 'an', 'духовка', 'духовка', 'rúra', 'a'],
+// food
+['apple', 'apples', 'an', 'яблоко', 'яблуко', 'jablko', 'a'],
+['orange', 'oranges', 'an', 'апельсин', 'апельсин', 'pomaranč', 'a'],
+['egg', 'eggs', 'an', 'яйцо', 'яйце', 'vajce', 'a'],
+['banana', 'bananas', 'a', 'банан', 'банан', 'banán', 'a'],
+['tomato', 'tomatoes', 'a', 'помидор', 'помідор', 'paradajka', 'a'],
+['potato', 'potatoes', 'a', 'картофель', 'картоплина', 'zemiak', 'a'],
+['sandwich', 'sandwiches', 'a', 'бутерброд', 'сендвіч', 'sendvič', 'a'],
+['cake', 'cakes', 'a', 'торт, пирожное', 'торт, тістечко', 'koláč, torta', 'a'],
+['onion', 'onions', 'an', 'лук (луковица)', 'цибуля', 'cibuľa', 'a'],
+['ice cream', 'ice creams', 'an', 'мороженое', 'морозиво', 'zmrzlina', 'a'],
+['water', '-', 'a', 'вода', 'вода', 'voda', 'a'],
+['milk', '-', 'a', 'молоко', 'молоко', 'mlieko', 'a'],
+['bread', '-', 'a', 'хлеб', 'хліб', 'chlieb', 'a'],
+// town and travel
+['city', 'cities', 'a', 'город (большой)', 'місто (велике)', 'veľkomesto', 'a'],
+['town', 'towns', 'a', 'город', 'місто', 'mesto', 'a'],
+['street', 'streets', 'a', 'улица', 'вулиця', 'ulica', 'a'],
+['shop', 'shops', 'a', 'магазин', 'магазин', 'obchod', 'a'],
+['bank', 'banks', 'a', 'банк', 'банк', 'banka', 'a'],
+['bus', 'buses', 'a', 'автобус', 'автобус', 'autobus', 'a'],
+['car', 'cars', 'a', 'машина', 'машина', 'auto', 'a'],
+['train', 'trains', 'a', 'поезд', 'потяг', 'vlak', 'a'],
+['airport', 'airports', 'an', 'аэропорт', 'аеропорт', 'letisko', 'a'],
+['office', 'offices', 'an', 'офис', 'офіс', 'kancelária', 'a'],
+['hospital', 'hospitals', 'a', 'больница', 'лікарня', 'nemocnica', 'a'],
+['hotel', 'hotels', 'a', 'гостиница', 'готель', 'hotel', 'a'],
+['church', 'churches', 'a', 'церковь', 'церква', 'kostol', 'a'],
+['museum', 'museums', 'a', 'музей', 'музей', 'múzeum', 'a'],
+['park', 'parks', 'a', 'парк', 'парк', 'park', 'a'],
+['country', 'countries', 'a', 'страна', 'країна', 'krajina', 'a'],
+['island', 'islands', 'an', 'остров', 'острів', 'ostrov', 'a'],
+['bridge', 'bridges', 'a', 'мост', 'міст', 'most', 'a'],
+['ticket', 'tickets', 'a', 'билет', 'квиток', 'lístok', 'a'],
+// school and work
+['book', 'books', 'a', 'книга', 'книжка', 'kniha', 'a'],
+['pen', 'pens', 'a', 'ручка', 'ручка', 'pero', 'a'],
+['pencil', 'pencils', 'a', 'карандаш', 'олівець', 'ceruzka', 'a'],
+['bag', 'bags', 'a', 'сумка', 'сумка', 'taška', 'a'],
+['computer', 'computers', 'a', 'компьютер', 'комп’ютер', 'počítač', 'a'],
+['phone', 'phones', 'a', 'телефон', 'телефон', 'telefón', 'a'],
+['photo', 'photos', 'a', 'фотография', 'фотографія', 'fotka', 'a'],
+['exercise', 'exercises', 'an', 'упражнение', 'вправа', 'cvičenie', 'a'],
+['idea', 'ideas', 'an', 'идея', 'ідея', 'nápad', 'a'],
+['answer', 'answers', 'an', 'ответ', 'відповідь', 'odpoveď', 'a'],
+['question', 'questions', 'a', 'вопрос', 'питання', 'otázka', 'a'],
+['letter', 'letters', 'a', 'письмо; буква', 'лист; літера', 'list; písmeno', 'a'],
+['email', 'emails', 'an', 'электронное письмо', 'електронний лист', 'e-mail', 'a'],
+['job', 'jobs', 'a', 'работа', 'робота', 'práca (zamestnanie)', 'a'],
+['university', 'universities', 'a', 'университет', 'університет', 'univerzita', 'a'],
+['uniform', 'uniforms', 'a', 'форма (одежда)', 'форма (одяг)', 'uniforma', ''],
+// time
+['day', 'days', 'a', 'день', 'день', 'deň', 'a'],
+['week', 'weeks', 'a', 'неделя', 'тиждень', 'týždeň', 'a'],
+['month', 'months', 'a', 'месяц', 'місяць', 'mesiac', 'a'],
+['year', 'years', 'a', 'год', 'рік', 'rok', 'a'],
+['hour', 'hours', 'an', 'час', 'година', 'hodina', 'a'],
+['minute', 'minutes', 'a', 'минута', 'хвилина', 'minúta', 'a'],
+['holiday', 'holidays', 'a', 'отпуск, праздник', 'відпустка, свято', 'dovolenka, sviatok', 'a'],
+['evening', 'evenings', 'an', 'вечер', 'вечір', 'večer', 'a'],
+['life', 'lives', 'a', 'жизнь', 'життя', 'život', 'ai'],
+['leaf', 'leaves', 'a', 'лист (дерева)', 'листок', 'list (zo stromu)', 'ai'],
+['party', 'parties', 'a', 'вечеринка', 'вечірка', 'párty, oslava', 'a'],
+['toy', 'toys', 'a', 'игрушка', 'іграшка', 'hračka', 'a'],
+['piano', 'pianos', 'a', 'пианино', 'піаніно', 'klavír', 'a'],
+['watch', 'watches', 'a', 'часы (наручные)', 'годинник (наручний)', 'hodinky', 'a'],
+['dress', 'dresses', 'a', 'платье', 'сукня', 'šaty', 'a'],
+['jacket', 'jackets', 'a', 'куртка', 'куртка', 'bunda', 'a'],
+['shoe', 'shoes', 'a', 'туфля, ботинок', 'черевик, туфля', 'topánka', 'a'],
+];
+
+export const NOUNS = RAW.map(([n, pl, art, ru, uk, sk, fl]) => ({
+  n, pl: pl === '-' ? null : pl, art, t: { ru, uk, sk }, a: fl.includes('a'), irr: fl.includes('i'),
+}));
+
+/** Plurals a learner might write: the plain -s, -es, -ies, the apostrophe (apple’s), and the regular form of an irregular noun. */
+export function wrongPlurals(W) {
+  const n = W.n, out = [n + 's', n + 'es', n.replace(/y$/, 'ies'), n.replace(/f(e)?$/, 'ves'), n, n + '’s'];
+  if (W.irr) out.push(W.pl + 's', n + 's');
+  if (/[^aeiou]y$/.test(n)) out.push(n + 's');
+  return [...new Set(out)].filter(f => f !== W.pl);
+}

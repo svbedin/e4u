@@ -1,0 +1,47 @@
+/*!
+ * E4U — Cloudflare Worker settings for `npm run deploy`
+ * Copyright (c) 2026 Serg. All rights reserved.
+ *
+ * The game is served from www/ as static files; only /api/* runs worker/index.js.
+ * Values below are public identifiers, not secrets. ACCESS_AUD: AUD tag of the Access application
+ * for e4u.slovko.win (several applications → comma-separated). Empty until the Access application is made (see README). The workers.dev address is closed. Secrets live in Cloudflare:
+ *   npx wrangler secret put CF_API_TOKEN   (API token: Access — Apps and Policies — Edit)
+ *   npx wrangler secret put ADMIN_EMAILS   (owner e-mail(s), comma-separated)
+ *   npx wrangler secret put RESEND_API_KEY (Resend → API Keys; e-mails to testers)
+ *   VAPID_PRIVATE (reminders; made with VAPID_PUBLIC by `npm run vapid`, which puts the secret itself)
+ * MAIL_FROM: sender of tester e-mails (domain verified in Resend); empty = no e-mails.
+ * Replies go to the owner (reply_to = first ADMIN_EMAILS), so the hello@ mailbox need not exist.
+ */
+{
+  "name": "e4u",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-09-01",
+  "workers_dev": false,
+  "routes": [
+    { "pattern": "e4u.slovko.win", "custom_domain": true }
+  ],
+  "preview_urls": false,
+  // reminders of the daily training (worker/push.js): every 15 minutes
+  "triggers": { "crons": ["*/15 * * * *"] },
+  "assets": {
+    "directory": "./www",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "vars": {
+    "ACCOUNT_ID": "c9210d5116f321db52ab7181ba07abe5",
+    "ACCESS_TEAM": "calm-voice-b665.cloudflareaccess.com",
+    "ACCESS_AUD": "",
+    "POLICY_NAME": "E4U testers",
+    "APP_URL": "https://e4u.slovko.win",
+    "MAIL_FROM": "E4U <hello@slovko.win>",
+    "VAPID_PUBLIC": ""
+  },
+  "kv_namespaces": [
+    { "binding": "TESTERS", "id": "TODO-KV-ID" }
+  ],
+  // tournament: players and rounds (worker/schema.sql)
+  "d1_databases": [
+    { "binding": "DB", "database_name": "e4u", "database_id": "TODO-D1-ID" }
+  ]
+}

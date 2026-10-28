@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.DS_Store
+Thumbs.db
+.wrangler/
+android/
+ios/
+tools/forms.txt
+
+# textbooks and other copyrighted materials: on this computer only, never in git or on the site
+materials/
