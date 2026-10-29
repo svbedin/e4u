@@ -37,16 +37,22 @@ export const DIALOGS = DRAW.map(([topic, line, reply, wrong, ru, uk, sk]) =>
 
 const tr = P => P.t[getLang()] || '';
 const PROPER = /^(I|I’m|I’d|I’ve|Peter|Anna|Tom|Max|London|Bratislava|Ukraine|Slovakia|English|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)$/;
-// topics 1–8 are A1; topics from A2_TOPIC on are A2 — asked only at the A2 level (home screen)
-const A2_TOPIC = 9;
+// topics 1–10 are A1, in the order of the coursebooks' units; topics from A2_TOPIC on are A2 — asked only at the A2 level (home screen)
+export const TOPICS = [...new Set(RAW.map(r => r[0]))];
+const A2_TOPIC = 11;
 const levelOk = x => getProfile().level === 'a2' || x.topic < A2_TOPIC;
-const inLevel = () => PHRASES.filter(levelOk);
-const dialogsInLevel = () => DIALOGS.filter(levelOk);
+const levelTopics = () => TOPICS.filter(t => levelOk({ topic: t }));
+// the topics picked in the section menu (none picked, or none of them in the level — all topics of the level)
+const topicOk = st => { const on = ((st && st.topics) || []).filter(t => levelTopics().includes(t)); return x => !on.length || on.includes(x.topic); };
+const inLevel = st => { const L = PHRASES.filter(levelOk), L1 = L.filter(topicOk(st)); return L1.length ? L1 : L; };
+const dialogsInLevel = st => { const L = DIALOGS.filter(levelOk), L1 = L.filter(topicOk(st)); return L1.length ? L1 : L; };
 
 /** Review mistakes: the phrases with mistakes that suit this mode (ok); none suit — the usual phrases. */
 function pool(st, review, ok = () => true) {
-  if (review) { const keys = Object.keys(st.mist); const p = inLevel().filter(P => keys.includes(P.key) && ok(P)); if (p.length) return p; }
-  return inLevel().filter(ok);
+  if (review) { const keys = Object.keys(st.mist); const p = inLevel(st).filter(P => keys.includes(P.key) && ok(P)); if (p.length) return p; }
+  // the picked topics have no phrase for this mode (e.g. "Build the phrase"): all topics of the level
+  const p = inLevel(st).filter(ok);
+  return p.length ? p : PHRASES.filter(levelOk).filter(ok);
 }
 /** A phrase with an earlier mistake first (the engine's list for this round), else a random one, not the previous. */
 function pick(st, review, prev, due, ok = () => true, seen) {
@@ -133,7 +139,7 @@ function dialogTask(D, isDue) {
 }
 function pickDialog(st, review, prev, due, seen) {
   while (due && due.length) { const k = due.shift(), D = DIALOGS.find(x => x.key === k); if (D && levelOk(D)) return { D, due: true }; }
-  const keys = review ? Object.keys(st.mist) : [], DL = dialogsInLevel();
+  const keys = review ? Object.keys(st.mist) : [], DL = dialogsInLevel(st);
   let L = review && DL.some(D => keys.includes(D.key)) ? DL.filter(D => keys.includes(D.key)) : DL;
   if (seen && L.some(D => !seen.has(D.key))) L = L.filter(D => !seen.has(D.key));
   for (let n = 0; n < 50; n++) { const D = rnd(L); if (D !== prev || L.length < 2) return { D }; }
@@ -167,11 +173,30 @@ export default {
   titleKey: 'phT',
   descKey: 'phD',
   strings,
-  defaults: { best: {}, mist: {} },
+  defaults: { topics: [], best: {}, mist: {} },
   // the dictation needs an English voice
   get modes() { return MODES_ALL.filter(m => m !== 'dict' || canSpeak()); },
 
-  summary() { return `${T('phN')}: <b>${inLevel().length}</b> · ${T('phDlgN')}: <b>${dialogsInLevel().length}</b> · ${getProfile().level === 'a2' ? 'A1–A2' : 'A1'}`; },
+  normalize(st) { st.topics = (st.topics || []).filter(t => TOPICS.includes(t)); },
+
+  // the lessons' topics: none picked = all of them; a tap picks or unpicks one
+  settingsHTML(st) {
+    const on = st.topics.filter(t => levelTopics().includes(t));
+    const chip = t => `<button class="chip" data-act="phrases:topic" data-v="${t}" aria-pressed="${on.includes(t)}">${t}. ${T('phTopic' + t)}${
+      t >= A2_TOPIC ? ' <small class="lvl-tag">A2</small>' : ''}</button>`;
+    return `<div class="group"><span class="label">${T('phTopics')}</span><div class="chips">`
+      + `<button class="chip" data-act="phrases:topic" data-v="0" aria-pressed="${!on.length}">${T('phAll')}</button>${levelTopics().map(chip).join('')}</div></div>`;
+  },
+
+  init({ on, st, save, rerender }) {
+    on('phrases:topic', v => {
+      const s = st(), t = Number(v), i = s.topics.indexOf(t);
+      if (!t) s.topics = []; else if (i >= 0) s.topics.splice(i, 1); else s.topics.push(t);
+      save(); rerender();
+    });
+  },
+
+  summary() { return `${T('phN')}: <b>${PHRASES.filter(levelOk).length}</b> · ${T('phDlgN')}: <b>${DIALOGS.filter(levelOk).length}</b> · ${getProfile().level === 'a2' ? 'A1–A2' : 'A1'}`; },
 
   question(mode, st, { review, prev, due, seen }) {
     const last = prev && prev._raw;
@@ -196,7 +221,11 @@ export default {
       const s = norm(q.value.trim());
       const item = (en, t) => `<div class="pitem"><b>${esc(en)}</b>${sayButton(en)}${t ? `<span>${esc(t)}</span>` : ''}</div>`;
       const hit = text => !s || norm(text).includes(s);
-      pl.innerHTML = PHRASES.filter(P => hit(P.full + ' ' + Object.values(P.t).join(' '))).map(P => item(P.full, tr(P))).join('')
+      // by topic, in the order of the lessons
+      pl.innerHTML = TOPICS.map(t => {
+        const L = PHRASES.filter(P => P.topic === t && hit(P.full + ' ' + Object.values(P.t).join(' ')));
+        return L.length ? `<p class="label" style="margin:12px 0 0">${t}. ${T('phTopic' + t)}${t >= A2_TOPIC ? ' · A2' : ''}</p>` + L.map(P => item(P.full, tr(P))).join('') : '';
+      }).join('')
         + `<p class="label" style="margin:12px 0 0">${T('phDlgN')}</p>`
         + DIALOGS.filter(D => hit(`${D.line} ${D.reply} ${Object.values(D.t).join(' ')}`)).map(D => item(`${D.line} — ${D.reply}`, tr(D))).join('');
     };

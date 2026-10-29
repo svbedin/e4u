@@ -56,7 +56,7 @@ export const GRAMMAR = [
     ],
   },
   {
-    id: 'cont', level: 'A1', sections: ['verbs'],
+    id: 'cont', level: 'A2', sections: ['verbs'],
     title: { ru: 'Present Continuous — сейчас', uk: 'Present Continuous — зараз', sk: 'Present Continuous — práve teraz' },
     text: {
       ru: ['То, что происходит прямо сейчас: **am / is / are + глагол с -ing**: *I am reading, she is cooking, they are playing*.',

@@ -141,7 +141,7 @@ try {
     }
     // verbs: every mode; the typing keyboard has the apostrophe
     await click('[data-act="go"][data-v="hub:verbs"]'); await shot(p + '02-hub-verbs');
-    check('глаголы: этапы to be … Past Simple, при A1 без третьей формы', await js(`[...document.querySelectorAll('[data-act="verbs:stage"]')].map(b => b.dataset.v).join(',')`) === 'be,pres,cont,past');
+    check('глаголы: этапы to be … Past Simple, при A1 без Present Continuous и третьей формы', await js(`[...document.querySelectorAll('[data-act="verbs:stage"]')].map(b => b.dataset.v).join(',')`) === 'be,pres,past');
     for (const m of ['quiz', 'match', 'blitz']) await play('verbs', m, `${p}03-verbs-${m}`);
     await click('[data-act="play"][data-v="verbs:type"]'); await shot(p + '03-verbs-type');
     check('письмо: на клавиатуре есть апостроф ’', await js(`[...document.querySelectorAll('[data-act="key"]')].some(b => b.dataset.v === '’')`));
@@ -156,6 +156,13 @@ try {
     await click('[data-act="go"][data-v="hub:nouns"]');
     // phrases: every mode, the dictation too (there is an English voice)
     await click('[data-act="go"][data-v="home"]'); await click('[data-act="go"][data-v="hub:phrases"]'); await shot(p + '08-hub-phrases');
+    // the lessons' topics: 10 at A1 and "all"; picking one shows it pressed, "all" unpicks it
+    check('фразы: «Все темы» и 10 тем A1', await js(`document.querySelectorAll('[data-act="phrases:topic"]').length`) === 11);
+    await click('[data-act="phrases:topic"][data-v="2"]'); await shot(p + '08b-hub-phrases-topic');
+    check('фразы: тема 2 выбрана', await js(`document.querySelector('[data-act="phrases:topic"][data-v="2"]').getAttribute('aria-pressed')`) === 'true');
+    await play('phrases', 'quiz', p + '08c-phrases-topic-quiz');
+    await click('[data-act="phrases:topic"][data-v="0"]');
+    check('фразы: «Все темы» снова выбраны', await js(`document.querySelector('[data-act="phrases:topic"][data-v="0"]').getAttribute('aria-pressed')`) === 'true');
     for (const m of ['quiz', 'type', 'fix', 'order', 'translate', 'dialog', 'dict']) await play('phrases', m, `${p}09-phrases-${m}`);
     await click('[data-act="go"][data-v="ref:phrases"]'); await shot(p + '10-phrases-ref');
     await click('[data-act="go"][data-v="hub:phrases"]');

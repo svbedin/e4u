@@ -24,7 +24,7 @@ initStore();
 const meaning = (where, t) => { for (const l of LANGS) if (!t[l] || !String(t[l]).trim()) bad(where, `нет перевода (${l})`); };
 
 // ---- 1. verbs ----
-const { VERBS, STAGES, formFor, fits } = await import('../www/js/sections/verbs/data.js');
+const { VERBS, STAGES, A2_STAGES, formFor, fits } = await import('../www/js/sections/verbs/data.js');
 const vs = new Set();
 for (const V of VERBS) {
   const w = `глагол «${V.v}»`;
@@ -46,14 +46,21 @@ for (const W of NOUNS) {
   if (!EN.test(W.n) || (W.pl && !EN.test(W.pl))) bad(w, 'странная форма');
   if (!['a', 'an'].includes(W.art)) bad(w, `артикль «${W.art}» — ожидается a или an`);
   // an before a vowel letter is the rule; the exceptions (an hour, a university) are written out and listed here
-  const vowel = /^[aeiou]/.test(W.n), EXC = { hour: 'an', university: 'a', uniform: 'a' };
+  const vowel = /^[aeiou]/.test(W.n), EXC = { hour: 'an', university: 'a', uniform: 'a', euro: 'a' };
   if (!(W.n in EXC) && (W.art === 'an') !== vowel) bad(w, `артикль «${W.art}» не совпадает с первой буквой — проверьте произношение`);
   if (W.pl && wrongPlurals(W).includes(W.pl)) bad(w, 'верное множественное число попало в неверные варианты');
   meaning(w, W.t);
 }
 
 // ---- 3. phrases ----
-const { PHRASES, DIALOGS } = await import('../www/js/sections/phrases/index.js');
+const { PHRASES, DIALOGS, TOPICS } = await import('../www/js/sections/phrases/index.js');
+// every lesson topic has a name in every language and enough phrases to play it on its own
+const phStr = (await import('../www/js/sections/phrases/strings.js')).default;
+for (const t of TOPICS) {
+  for (const l of LANGS) if (!phStr[l]?.['phTopic' + t]) bad(`тема фраз ${t}`, `нет названия (${l})`);
+  const n = PHRASES.filter(P => P.topic === t).length;
+  if (n < 10) bad(`тема фраз ${t}`, `фраз ${n} — нужно не меньше 10`);
+}
 const ps = new Set();
 for (const P of PHRASES) {
   const w = `фраза «${P.full}»`;
@@ -79,6 +86,8 @@ const SECTIONS = {
   verbs: [(await import('../www/js/sections/verbs/index.js')).default, { stages: [...STAGES], mist: {} }],
   nouns: [(await import('../www/js/sections/nouns/index.js')).default, { stages: ['art', 'pl'], mist: {} }],
   phrases: [(await import('../www/js/sections/phrases/index.js')).default, { mist: {} }],
+  // lesson topics picked: 2 and 11 (11 is A2 — at A1 only topic 2 is asked)
+  'phrases-topic': [(await import('../www/js/sections/phrases/index.js')).default, { topics: [2, 11], mist: {} }],
 };
 for (const level of ['a1', 'a2']) {
   getProfile().level = level;
@@ -89,7 +98,7 @@ for (const level of ['a1', 'a2']) {
         if (!q.options.some(o => o.value === q.answer)) bad(`${id} (${mode})`, `нет верного ответа среди вариантов: ${q.key}`);
         if (new Set(q.options.map(o => String(o.value).toLowerCase())).size !== q.options.length) bad(`${id} (${mode})`, `повтор варианта: ${q.key}`);
       }
-      if (level === 'a1' && id === 'verbs' && q._raw && q._raw.s === 'pp') bad('глаголы', 'третья форма (A2) спрашивается при уровне A1');
+      if (level === 'a1' && id === 'verbs' && q._raw && A2_STAGES.includes(q._raw.s)) bad('глаголы', `этап A2 «${q._raw.s}» спрашивается при уровне A1`);
       q = q.then ? q.then() : null;
     }
   }

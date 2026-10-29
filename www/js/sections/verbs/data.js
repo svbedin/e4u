@@ -112,6 +112,21 @@ const RAW = [
 ['decide', 'decides', 'decided', 'decided', 'deciding', 'решать', 'вирішувати', 'rozhodnúť sa', ''],
 ['change', 'changes', 'changed', 'changed', 'changing', 'менять', 'змінювати', 'meniť', ''],
 ['agree', 'agrees', 'agreed', 'agreed', 'agreeing', 'соглашаться', 'погоджуватися', 'súhlasiť', ''],
+// from the A1 coursebook's wordlist (Navigate A1)
+['spell', 'spells', 'spelt|spelled', 'spelt|spelled', 'spelling', 'произносить по буквам', 'називати по літерах', 'hláskovať', 'ai'],
+['check', 'checks', 'checked', 'checked', 'checking', 'проверять', 'перевіряти', 'skontrolovať', 'a'],
+['practise', 'practises', 'practised', 'practised', 'practising', 'практиковать, упражняться', 'практикувати, вправлятися', 'precvičovať', 'a'],
+['repeat', 'repeats', 'repeated', 'repeated', 'repeating', 'повторять', 'повторювати', 'opakovať', 'a'],
+['cycle', 'cycles', 'cycled', 'cycled', 'cycling', 'ездить на велосипеде', 'їздити на велосипеді', 'bicyklovať sa', 'a'],
+['hate', 'hates', 'hated', 'hated', 'hating', 'ненавидеть', 'ненавидіти', 'neznášať', 'a'],
+['collect', 'collects', 'collected', 'collected', 'collecting', 'собирать, коллекционировать', 'збирати, колекціонувати', 'zbierať', 'a'],
+['return', 'returns', 'returned', 'returned', 'returning', 'возвращаться', 'повертатися', 'vrátiť sa', 'a'],
+['happen', 'happens', 'happened', 'happened', 'happening', 'случаться', 'траплятися', 'stať sa', 'a'],
+['miss', 'misses', 'missed', 'missed', 'missing', 'опаздывать (на поезд); скучать', 'спізнюватися (на потяг); сумувати', 'zmeškať; chýbať (niekomu)', 'a'],
+['join', 'joins', 'joined', 'joined', 'joining', 'присоединяться, вступать', 'приєднуватися, вступати', 'pridať sa, vstúpiť', 'a'],
+['order', 'orders', 'ordered', 'ordered', 'ordering', 'заказывать', 'замовляти', 'objednať', 'a'],
+['book', 'books', 'booked', 'booked', 'booking', 'бронировать', 'бронювати', 'rezervovať', 'a'],
+['type', 'types', 'typed', 'typed', 'typing', 'печатать (на клавиатуре)', 'друкувати (на клавіатурі)', 'písať na klávesnici', 'a'],
 ];
 
 export const VERBS = RAW.map(([base, s, past, pp, ing, ru, uk, sk, fl]) => ({
@@ -126,9 +141,10 @@ export const BE = { pres: { I: 'am', you: 'are', he: 'is', she: 'is', we: 'are',
 /** have got: he / she has got */
 export const HAVE_AUX = p => (THIRD(p) ? 'has' : 'have');
 
-/** The stages (what is asked): to be, Present Simple, Present Continuous, Past Simple; past participle is A2. */
+/** The stages (what is asked): to be, Present Simple, Past Simple; Present Continuous and the past participle are A2
+ *  (the A1 coursebooks — Navigate A1, Cutting Edge Starter — leave Present Continuous to A2). */
 export const STAGES = ['be', 'pres', 'cont', 'past', 'pp'];
-export const A2_STAGES = ['pp'];
+export const A2_STAGES = ['cont', 'pp'];
 
 /** The form asked in a stage for a person: { lead, form, alts } — lead is shown before the gap. */
 export function formFor(V, stage, p) {
