@@ -196,7 +196,7 @@ try {
     await click('[data-act="go"][data-v="home"]'); await play('daily', 'daily', p + '11-daily');
     // grammar: from the verbs menu its rules first and open
     await click('[data-act="go"][data-v="hub:verbs"]'); await click('[data-act="go"][data-v="grammar:verbs"]'); await shot(p + '12-grammar-verbs');
-    check('грамматика: 13 правил, правило to be открыто первым', await js(`(() => { const d = [...document.querySelectorAll('details.gram')]; return d.length === 13 && d[0].open && d[0].id === 'g-be'; })()`));
+    check('грамматика: 17 правил, правило to be открыто первым', await js(`(() => { const d = [...document.querySelectorAll('details.gram')]; return d.length === 17 && d[0].open && d[0].id === 'g-be'; })()`));
     await click('[data-act="go"][data-v="hub:verbs"]');
     // the owner's screens
     await click('[data-act="go"][data-v="home"]'); await click('[data-act="go"][data-v="settings"]');

@@ -64,7 +64,7 @@ export default {
     // the words of the coursebook's units, like the lessons' topics in "Phrases"
     const unit = u => `<button class="chip" data-act="nouns:unit" data-v="${u}" aria-pressed="${st.units.includes(u)}">${u}. ${T('nUnit' + u)}</button>`;
     return `<div class="group"><span class="label">${T('nStages')}</span><div class="chips">${STAGES.map(chip).join('')}</div></div>
-      <div class="group"><span class="label">${T('nUnits')}</span><div class="chips"><button class="chip" data-act="nouns:unit" data-v="0" aria-pressed="${!st.units.length}">${T('nAllUnits')}</button>${UNITS.map(unit).join('')}</div></div>`;
+      <div class="group"><span class="label">${T('nUnits')}</span><div class="chips"><button class="chip" data-act="nouns:unit" data-v="0" aria-pressed="${!st.units.length}">${T('nAllUnits')}</button>${UNITS.filter(u => inLevel().some(W => W.u === u)).map(unit).join('')}</div></div>`;
   },
 
   summary() { return `${T('nWords')}: <b>${inLevel().filter(W => W.pl).length}</b> · ${getProfile().level === 'a2' ? 'A1–A2' : 'A1'}`; },
