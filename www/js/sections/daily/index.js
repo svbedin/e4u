@@ -15,7 +15,7 @@ import { dailyDone } from '../../core/push.js';
 
 // the modes a section can be asked in here: choosing an answer, putting words in order, finding the mistake
 // (typing, pairs and the dictation stay in the sections themselves)
-const MODES = { verbs: ['quiz'], nouns: ['quiz'], adj: ['quiz'], nums: ['quiz'],
+const MODES = { verbs: ['quiz'], nouns: ['quiz'], adj: ['quiz'], pron: ['quiz'], nums: ['quiz'],
   phrases: ['quiz', 'fix', 'order', 'translate', 'dialog'] };
 
 let R = null;  // this round: per section its mistakes still to ask, the keys asked, the last task

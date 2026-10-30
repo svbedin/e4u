@@ -9,6 +9,7 @@ import verbs from './verbs/index.js';
 import nouns from './nouns/index.js';
 import nums from './nums/index.js';
 import adj from './adj/index.js';
+import pron from './pron/index.js';
 import phrases from './phrases/index.js';
 import daily from './daily/index.js';
 import { sectionState } from '../core/store.js';
@@ -17,6 +18,7 @@ export const SECTIONS = [
   verbs,
   nouns,
   adj,
+  pron,
   nums,
   phrases,  // last, right above the tournament: phrases bring together what the sections above train
   daily,    // hidden: started from its own card at the top of the home screen

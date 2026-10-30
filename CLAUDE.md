@@ -18,6 +18,8 @@ E4U (*easy for you, English for you*) — игровой тренажёр анг
   (в т. ч. men, children, knives).
 - Раздел «Прилагательные» (A1–A2): 89 слов (A1: 78), значение, противоположности, цвета; сравнение (bigger, the biggest) — A2;
   все формы записаны явно в `sections/adj/data.js`, неверные варианты — `compWrong` / `supWrong`.
+- Раздел «Местоимения» (A1–A2): I — me — my — mine — myself (таблица `FORMS`), 36 предложений с пропуском (`SENTENCES`,
+  переводы на 3 языка); myself / herself — A2.
 - Раздел «Числа и время» (A1): числа словами (0 – 1 000 000), порядковые, который час, даты, цены (£ € $), годы, диктант
   чисел на слух; слова строятся по правилам британского английского в `sections/nums/data.js` и сверяются с образцами
   в `npm run check`. Клавиатура без дефиса — каждый ответ принимается и с пробелом (`variants`).
@@ -26,7 +28,7 @@ E4U (*easy for you, English for you*) — игровой тренажёр анг
 - Раздел «Фразы» (A1–A2): 186 фраз и 38 диалогов, написанных для E4U, по 10 темам A1 в порядке уроков учебника
   и теме 11 (A2, только при уровне A2); темы можно выбрать в меню раздела (`phTopic1…11` в `strings.js`, `TOPICS` в `index.js`);
   режимы: Викторина, Письмо, Найди ошибку, Собери фразу, Перевод, Диалог, Диктант (с английским голосом).
-- «Тренировка дня», турнир, напоминания (push), отчёты о сбоях, экран «Грамматика» (12 правил) — как в Slovko.
+- «Тренировка дня», турнир, напоминания (push), отчёты о сбоях, экран «Грамматика» (13 правил) — как в Slovko.
 
 ## Главные правила
 
@@ -53,6 +55,7 @@ www/js/screens/               главная и настройки (screens.js),
 www/js/sections/verbs/        data.js: [base, he/she, past, past participle, -ing, ru, uk, sk, флаги a / i]; index.js; strings.js
 www/js/sections/nouns/        data.js: [единственное, множественное или -, a | an, ru, uk, sk, флаги a / i]; index.js; strings.js
 www/js/sections/adj/          data.js: [слово, сравн., превосх., противоположное, ru, uk, sk, флаги]; index.js; strings.js
+www/js/sections/pron/         data.js: FORMS (кто / кого / чей / чей без слова / сам), SENTENCES [этап, фраза с {ответ|подсказка|неверные}, ru, uk, sk]; index.js; strings.js
 www/js/sections/nums/         data.js: правила (word, ordinal, timeWord, dateWord, priceWord, yearWord); index.js; strings.js
 www/js/sections/phrases/      data.js: [тема, фраза с {ответ|подсказка|неверные}, ru, uk, sk, порядок слов]; DIALOGS: [тема, реплика, ответ, неверные, ru, uk, sk]
 www/js/sections/daily/        «Тренировка дня»

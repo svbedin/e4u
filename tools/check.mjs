@@ -86,6 +86,14 @@ for (const A of ADJ) {
   meaning(w, A.t);
 }
 
+// ---- 2d. pronouns: every sentence has its gap, the wrong forms differ from the answer, translations ----
+const { SENT } = await import('../www/js/sections/pron/index.js');
+for (const S of SENT) {
+  const w = `местоимение «${S.full}»`;
+  if (!S.a || !S.w.length || S.w.includes(S.a) || new Set(S.w).size !== S.w.length) bad(w, 'проверьте пропуск и неверные варианты');
+  meaning(w, S.t);
+}
+
 // ---- 3. phrases ----
 const { PHRASES, DIALOGS, TOPICS } = await import('../www/js/sections/phrases/index.js');
 // every lesson topic has a name in every language and enough phrases to play it on its own
@@ -122,6 +130,7 @@ const SECTIONS = {
   phrases: [(await import('../www/js/sections/phrases/index.js')).default, { mist: {} }],
   // lesson topics picked: 2 and 11 (11 is A2 — at A1 only topic 2 is asked)
   adj: [(await import('../www/js/sections/adj/index.js')).default, { stages: ['mean', 'opp', 'comp', 'sup'], mist: {} }],
+  pron: [(await import('../www/js/sections/pron/index.js')).default, { stages: ['forms', 'sent', 'refl'], mist: {} }],
   nums: [(await import('../www/js/sections/nums/index.js')).default, { stages: ['n100', 'big', 'ord', 'time', 'date', 'price', 'year'], mist: {} }],
   'phrases-topic': [(await import('../www/js/sections/phrases/index.js')).default, { topics: [2, 11], mist: {} }],
 };
@@ -134,12 +143,13 @@ for (const level of ['a1', 'a2']) {
         if (!q.options.some(o => o.value === q.answer)) bad(`${id} (${mode})`, `нет верного ответа среди вариантов: ${q.key}`);
         if (new Set(q.options.map(o => String(o.value).toLowerCase())).size !== q.options.length) bad(`${id} (${mode})`, `повтор варианта: ${q.key}`);
       }
+      if (level === 'a1' && id === 'pron' && /self\b|selves\b/.test(q.answer)) bad('местоимения', `myself (A2) спрашивается при уровне A1: ${q.key}`);
       if (level === 'a1' && id === 'adj' && /^(comp|sup):/.test(q.key)) bad('прилагательные', `сравнение (A2) спрашивается при уровне A1: ${q.key}`);
       if (level === 'a1' && id === 'verbs' && q._raw && A2_STAGES.includes(q._raw.s)) bad('глаголы', `этап A2 «${q._raw.s}» спрашивается при уровне A1`);
       q = q.then ? q.then() : null;
     }
   }
-  for (const id of ['verbs', 'nouns', 'adj', 'nums']) { const [S, st] = SECTIONS[id]; const m = S.matchSet(st, {}); if (m.pairs.length < 4) bad(`${id} (пары)`, `пар ${m.pairs.length}`); }
+  for (const id of ['verbs', 'nouns', 'adj', 'pron', 'nums']) { const [S, st] = SECTIONS[id]; const m = S.matchSet(st, {}); if (m.pairs.length < 4) bad(`${id} (пары)`, `пар ${m.pairs.length}`); }
 }
 
 // ---- 6. translations ----
@@ -153,7 +163,7 @@ function sameKeys(where, dict) {
 const src = await readFile(join(WWW, 'js/core/i18n.js'), 'utf8');
 const start = src.indexOf('const STR = '), end = src.indexOf('\n};', start);
 if (start < 0 || end < 0) bad('core/i18n.js', 'не найден объект STR'); else sameKeys('core/i18n.js', new Function(`return ${src.slice(start + 12, end + 2)}`)());
-for (const s of ['verbs', 'nouns', 'adj', 'nums', 'phrases', 'daily']) sameKeys(`sections/${s}/strings.js`, (await import(`../www/js/sections/${s}/strings.js`)).default);
+for (const s of ['verbs', 'nouns', 'adj', 'pron', 'nums', 'phrases', 'daily']) sameKeys(`sections/${s}/strings.js`, (await import(`../www/js/sections/${s}/strings.js`)).default);
 {
   const { GRAMMAR } = await import('../www/js/screens/grammar-data.js');
   const ids = new Set();

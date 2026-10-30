@@ -133,10 +133,10 @@ try {
     await shot(p + '01b-settings');
     check('выбор голоса: из трёх голосов показаны два — женский и мужской', await js(`document.querySelectorAll('[data-act="voice"]').length`) === 2);
     await click('[data-act="go"][data-v="home"]'); await shot(p + '01-home');
-    check('главная: глаголы, существительные, прилагательные, числа, фразы', await js(`['hub:verbs','hub:nouns','hub:adj','hub:nums','hub:phrases'].every(v => document.querySelector('[data-v="'+v+'"]'))`));
+    check('главная: глаголы, существительные, прилагательные, местоимения, числа, фразы', await js(`['hub:verbs','hub:nouns','hub:adj','hub:pron','hub:nums','hub:phrases'].every(v => document.querySelector('[data-v="'+v+'"]'))`));
     check('главная: «Тренировка дня» и «Грамматика»', await js(`!!document.querySelector('[data-v="daily:daily"]') && !!document.querySelector('.screen > [data-v="grammar"]')`));
     if (lang !== 'ru') {  // the other languages: the menus only
-      for (const s of ['verbs', 'nouns', 'adj', 'nums', 'phrases']) { await click(`[data-act="go"][data-v="hub:${s}"]`); await shot(`${p}02-hub-${s}`); await click('[data-act="go"][data-v="home"]'); }
+      for (const s of ['verbs', 'nouns', 'adj', 'pron', 'nums', 'phrases']) { await click(`[data-act="go"][data-v="hub:${s}"]`); await shot(`${p}02-hub-${s}`); await click('[data-act="go"][data-v="home"]'); }
       return;
     }
     // verbs: every mode; the typing keyboard has the apostrophe
@@ -161,6 +161,13 @@ try {
     await click('[data-act="go"][data-v="ref:adj"]'); await shot(p + '07g-adj-ref');
     check('таблица прилагательных: big — bigger — the biggest', await js(`document.querySelector('.screen').textContent.includes('the biggest')`));
     await click('[data-act="go"][data-v="hub:adj"]');
+    // pronouns: at A1 the forms and the sentences (myself is A2); every mode; the table
+    await click('[data-act="go"][data-v="home"]'); await click('[data-act="go"][data-v="hub:pron"]'); await shot(p + '07h-hub-pron');
+    check('местоимения: при A1 этапы «формы» и «в предложениях»', await js(`[...document.querySelectorAll('[data-act="pron:stage"]')].map(b => b.dataset.v).join(',')`) === 'forms,sent');
+    for (const m of ['quiz', 'type', 'match']) await play('pron', m, `${p}07i-pron-${m}`);
+    await click('[data-act="go"][data-v="ref:pron"]'); await shot(p + '07j-pron-ref');
+    check('таблица местоимений: I — me — my — mine', await js(`document.querySelector('.screen').textContent.includes('I — me — my — mine')`));
+    await click('[data-act="go"][data-v="hub:pron"]');
     // numbers and time: every mode, the dictation too; the table of numbers
     await click('[data-act="go"][data-v="home"]'); await click('[data-act="go"][data-v="hub:nums"]'); await shot(p + '07b-hub-nums');
     check('числа: 7 этапов (0–100 … годы)', await js(`document.querySelectorAll('[data-act="nums:stage"]').length`) === 7);
@@ -184,7 +191,7 @@ try {
     await click('[data-act="go"][data-v="home"]'); await play('daily', 'daily', p + '11-daily');
     // grammar: from the verbs menu its rules first and open
     await click('[data-act="go"][data-v="hub:verbs"]'); await click('[data-act="go"][data-v="grammar:verbs"]'); await shot(p + '12-grammar-verbs');
-    check('грамматика: 12 правил, правило to be открыто первым', await js(`(() => { const d = [...document.querySelectorAll('details.gram')]; return d.length === 12 && d[0].open && d[0].id === 'g-be'; })()`));
+    check('грамматика: 13 правил, правило to be открыто первым', await js(`(() => { const d = [...document.querySelectorAll('details.gram')]; return d.length === 13 && d[0].open && d[0].id === 'g-be'; })()`));
     await click('[data-act="go"][data-v="hub:verbs"]');
     // the owner's screens
     await click('[data-act="go"][data-v="home"]'); await click('[data-act="go"][data-v="settings"]');

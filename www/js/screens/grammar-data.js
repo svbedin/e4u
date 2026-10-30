@@ -189,7 +189,7 @@ export const GRAMMAR = [
     ],
   },
   {
-    id: 'poss', level: 'A1', sections: ['phrases'],
+    id: 'poss', level: 'A1', sections: ['phrases', 'pron'],
     title: { ru: 'my / your / his / her и ’s', uk: 'my / your / his / her і ’s', sk: 'my / your / his / her a ’s' },
     text: {
       ru: ['Притяжательные слова стоят перед существительным: **my** (мой), **your** (твой, ваш), **his** (его), **her** (её), **its** (его / её — о предмете, животном), **our** (наш), **their** (их).',
@@ -270,6 +270,27 @@ export const GRAMMAR = [
       ['London is bigger than Bratislava.', { ru: 'Лондон больше Братиславы.', uk: 'Лондон більший за Братиславу.', sk: 'Londýn je väčší ako Bratislava.' }],
       ['This is the best pizza in town.', { ru: 'Это лучшая пицца в городе.', uk: 'Це найкраща піца в місті.', sk: 'Toto je najlepšia pizza v meste.' }],
       ['Trains are more expensive than buses.', { ru: 'Поезда дороже автобусов.', uk: 'Потяги дорожчі за автобуси.', sk: 'Vlaky sú drahšie ako autobusy.' }],
+    ],
+  },
+  {
+    id: 'pron', level: 'A1', sections: ['pron', 'phrases'],
+    title: { ru: 'I — me — my — mine', uk: 'I — me — my — mine', sk: 'I — me — my — mine' },
+    text: {
+      ru: ['**Кто?** — *I, you, he, she, it, we, they*: стоит перед глаголом — *She lives here.*',
+        '**Кого? кому?** — *me, you, him, her, it, us, them*: после глагола и предлога — *I know him. Come with us.* Нельзя *I like she* — только *I like her*.',
+        '**Чей?** перед словом — *my, your, his, her, its, our, their*: *my bag*. **Чей?** без слова — *mine, yours, his, hers, ours, theirs*: *The bag is mine.*'],
+      sk: ['**Kto?** — *I, you, he, she, it, we, they*: stojí pred slovesom — *She lives here.*',
+        '**Koho? komu?** — *me, you, him, her, it, us, them*: po slovese a predložke — *I know him. Come with us.* Nie *I like she*, ale *I like her*.',
+        '**Čí?** pred slovom — *my, your, his, her, its, our, their*: *my bag*. **Čí?** bez slova — *mine, yours, his, hers, ours, theirs*: *The bag is mine.*'],
+      uk: ['**Хто?** — *I, you, he, she, it, we, they*: стоїть перед дієсловом — *She lives here.*',
+        '**Кого? кому?** — *me, you, him, her, it, us, them*: після дієслова й прийменника — *I know him. Come with us.* Не можна *I like she* — лише *I like her*.',
+        '**Чий?** перед словом — *my, your, his, her, its, our, their*: *my bag*. **Чий?** без слова — *mine, yours, his, hers, ours, theirs*: *The bag is mine.*'],
+    },
+    tables: [tbl('I — me — my — mine', [['I', 'me — my — mine'], ['you', 'you — your — yours'], ['he', 'him — his — his'], ['she', 'her — her — hers'], ['it', 'it — its'], ['we', 'us — our — ours'], ['they', 'them — their — theirs']])],
+    ex: [
+      ['Can you help me?', { ru: 'Можешь мне помочь?', uk: 'Можеш мені допомогти?', sk: 'Môžeš mi pomôcť?' }],
+      ['This bag is mine.', { ru: 'Эта сумка моя.', uk: 'Ця сумка моя.', sk: 'Táto taška je moja.' }],
+      ['We visit them every summer.', { ru: 'Мы навещаем их каждое лето.', uk: 'Ми відвідуємо їх щоліта.', sk: 'Každé leto ich navštevujeme.' }],
     ],
   },
 ];
