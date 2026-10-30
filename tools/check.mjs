@@ -52,6 +52,40 @@ for (const W of NOUNS) {
   meaning(w, W.t);
 }
 
+// ---- 2b. numbers and time: the rules give the words of these examples ----
+const N = await import('../www/js/sections/nums/data.js');
+const EXAMPLES = [
+  [N.word, [[0, 'zero'], [13, 'thirteen'], [15, 'fifteen'], [21, 'twenty-one'], [40, 'forty'], [99, 'ninety-nine'], [100, 'one hundred'],
+    [101, 'one hundred and one'], [342, 'three hundred and forty-two'], [1000, 'one thousand'], [1500, 'one thousand five hundred'],
+    [2025, 'two thousand and twenty-five'], [25000, 'twenty-five thousand'], [125300, 'one hundred and twenty-five thousand three hundred'],
+    [1000000, 'one million'], [2500000, 'two million five hundred thousand']]],
+  [N.ordinal, [[1, 'first'], [2, 'second'], [3, 'third'], [4, 'fourth'], [5, 'fifth'], [8, 'eighth'], [9, 'ninth'], [12, 'twelfth'], [20, 'twentieth'],
+    [21, 'twenty-first'], [22, 'twenty-second'], [23, 'twenty-third'], [30, 'thirtieth'], [31, 'thirty-first'], [40, 'fortieth'], [100, 'one hundredth']]],
+  [N.ordShort, [[1, '1st'], [2, '2nd'], [3, '3rd'], [4, '4th'], [11, '11th'], [12, '12th'], [13, '13th'], [21, '21st'], [22, '22nd'], [23, '23rd'], [31, '31st']]],
+  [([h, m]) => N.timeWord(h, m), [[[6, 0], 'six o’clock'], [[6, 5], 'five past six'], [[6, 15], 'a quarter past six'], [[6, 25], 'twenty-five past six'],
+    [[6, 30], 'half past six'], [[6, 45], 'a quarter to seven'], [[6, 50], 'ten to seven'], [[12, 45], 'a quarter to one'], [[12, 30], 'half past twelve']]],
+  [([d, m]) => N.dateWord(d, m), [[[1, 3], 'the first of March'], [[22, 12], 'the twenty-second of December'], [[31, 5], 'the thirty-first of May']]],
+  [([c, w, s]) => N.priceWord(c, w, s), [[['£', 5, 50], 'five pounds fifty'], [['£', 1, 0], 'one pound'], [['£', 0, 80], 'eighty p'],
+    [['€', 2, 99], 'two euros ninety-nine'], [['$', 12, 30], 'twelve dollars thirty'], [['€', 0, 50], 'fifty cents']]],
+  [N.yearWord, [[1990, 'nineteen ninety'], [1905, 'nineteen oh five'], [1900, 'nineteen hundred'], [2000, 'two thousand'],
+    [2005, 'two thousand and five'], [2026, 'twenty twenty-six'], [1066, 'ten sixty-six']]],
+];
+for (const [f, list] of EXAMPLES) for (const [x, want] of list) { const got = f(x); if (got !== want) bad('числа', `${JSON.stringify(x)}: «${got}», а должно быть «${want}»`); }
+for (let n = 0; n <= 1000000; n += n < 2000 ? 1 : 997) if (!EN.test(N.word(n))) bad('числа', `странное слово для ${n}: «${N.word(n)}»`);
+
+// ---- 2c. adjectives: every row complete, the wrong forms are not right ones ----
+const { ADJ, compWrong, supWrong } = await import('../www/js/sections/adj/data.js');
+const as = new Set();
+for (const A of ADJ) {
+  const w = `прилагательное «${A.a}»`;
+  if (as.has(A.a)) bad(w, 'повторяется'); as.add(A.a);
+  for (const f of [A.a, ...A.comp, ...A.sup, ...A.opp]) if (!EN.test(f)) bad(w, `странная форма «${f}»`);
+  if (A.comp.length !== A.sup.length || (A.comp.length && A.comp.some(f => !/er$|^more /.test(f) && !['better', 'worse'].includes(f)))) bad(w, 'проверьте сравнительную степень');
+  if (A.comp.length && (compWrong(A).some(f => A.comp.includes(f)) || supWrong(A).some(f => A.sup.includes(f)))) bad(w, 'верная форма попала в неверные варианты');
+  if (A.comp.length && (compWrong(A).length < 2 || supWrong(A).length < 2)) bad(w, 'мало неверных вариантов');
+  meaning(w, A.t);
+}
+
 // ---- 3. phrases ----
 const { PHRASES, DIALOGS, TOPICS } = await import('../www/js/sections/phrases/index.js');
 // every lesson topic has a name in every language and enough phrases to play it on its own
@@ -87,6 +121,8 @@ const SECTIONS = {
   nouns: [(await import('../www/js/sections/nouns/index.js')).default, { stages: ['art', 'pl'], mist: {} }],
   phrases: [(await import('../www/js/sections/phrases/index.js')).default, { mist: {} }],
   // lesson topics picked: 2 and 11 (11 is A2 — at A1 only topic 2 is asked)
+  adj: [(await import('../www/js/sections/adj/index.js')).default, { stages: ['mean', 'opp', 'comp', 'sup'], mist: {} }],
+  nums: [(await import('../www/js/sections/nums/index.js')).default, { stages: ['n100', 'big', 'ord', 'time', 'date', 'price', 'year'], mist: {} }],
   'phrases-topic': [(await import('../www/js/sections/phrases/index.js')).default, { topics: [2, 11], mist: {} }],
 };
 for (const level of ['a1', 'a2']) {
@@ -98,11 +134,12 @@ for (const level of ['a1', 'a2']) {
         if (!q.options.some(o => o.value === q.answer)) bad(`${id} (${mode})`, `нет верного ответа среди вариантов: ${q.key}`);
         if (new Set(q.options.map(o => String(o.value).toLowerCase())).size !== q.options.length) bad(`${id} (${mode})`, `повтор варианта: ${q.key}`);
       }
+      if (level === 'a1' && id === 'adj' && /^(comp|sup):/.test(q.key)) bad('прилагательные', `сравнение (A2) спрашивается при уровне A1: ${q.key}`);
       if (level === 'a1' && id === 'verbs' && q._raw && A2_STAGES.includes(q._raw.s)) bad('глаголы', `этап A2 «${q._raw.s}» спрашивается при уровне A1`);
       q = q.then ? q.then() : null;
     }
   }
-  for (const id of ['verbs', 'nouns']) { const [S, st] = SECTIONS[id]; const m = S.matchSet(st, {}); if (m.pairs.length < 4) bad(`${id} (пары)`, `пар ${m.pairs.length}`); }
+  for (const id of ['verbs', 'nouns', 'adj', 'nums']) { const [S, st] = SECTIONS[id]; const m = S.matchSet(st, {}); if (m.pairs.length < 4) bad(`${id} (пары)`, `пар ${m.pairs.length}`); }
 }
 
 // ---- 6. translations ----
@@ -116,7 +153,7 @@ function sameKeys(where, dict) {
 const src = await readFile(join(WWW, 'js/core/i18n.js'), 'utf8');
 const start = src.indexOf('const STR = '), end = src.indexOf('\n};', start);
 if (start < 0 || end < 0) bad('core/i18n.js', 'не найден объект STR'); else sameKeys('core/i18n.js', new Function(`return ${src.slice(start + 12, end + 2)}`)());
-for (const s of ['verbs', 'nouns', 'phrases', 'daily']) sameKeys(`sections/${s}/strings.js`, (await import(`../www/js/sections/${s}/strings.js`)).default);
+for (const s of ['verbs', 'nouns', 'adj', 'nums', 'phrases', 'daily']) sameKeys(`sections/${s}/strings.js`, (await import(`../www/js/sections/${s}/strings.js`)).default);
 {
   const { GRAMMAR } = await import('../www/js/screens/grammar-data.js');
   const ids = new Set();

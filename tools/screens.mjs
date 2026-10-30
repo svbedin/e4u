@@ -133,10 +133,10 @@ try {
     await shot(p + '01b-settings');
     check('выбор голоса: из трёх голосов показаны два — женский и мужской', await js(`document.querySelectorAll('[data-act="voice"]').length`) === 2);
     await click('[data-act="go"][data-v="home"]'); await shot(p + '01-home');
-    check('главная: глаголы, существительные, фразы', await js(`['hub:verbs','hub:nouns','hub:phrases'].every(v => document.querySelector('[data-v="'+v+'"]'))`));
+    check('главная: глаголы, существительные, прилагательные, числа, фразы', await js(`['hub:verbs','hub:nouns','hub:adj','hub:nums','hub:phrases'].every(v => document.querySelector('[data-v="'+v+'"]'))`));
     check('главная: «Тренировка дня» и «Грамматика»', await js(`!!document.querySelector('[data-v="daily:daily"]') && !!document.querySelector('.screen > [data-v="grammar"]')`));
     if (lang !== 'ru') {  // the other languages: the menus only
-      for (const s of ['verbs', 'nouns', 'phrases']) { await click(`[data-act="go"][data-v="hub:${s}"]`); await shot(`${p}02-hub-${s}`); await click('[data-act="go"][data-v="home"]'); }
+      for (const s of ['verbs', 'nouns', 'adj', 'nums', 'phrases']) { await click(`[data-act="go"][data-v="hub:${s}"]`); await shot(`${p}02-hub-${s}`); await click('[data-act="go"][data-v="home"]'); }
       return;
     }
     // verbs: every mode; the typing keyboard has the apostrophe
@@ -154,6 +154,20 @@ try {
     for (const m of ['quiz', 'type', 'match']) await play('nouns', m, `${p}06-nouns-${m}`);
     await click('[data-act="go"][data-v="ref:nouns"]'); await shot(p + '07-nouns-ref');
     await click('[data-act="go"][data-v="hub:nouns"]');
+    // adjectives: at A1 the meaning and opposites only (the comparison is A2); every mode; the table
+    await click('[data-act="go"][data-v="home"]'); await click('[data-act="go"][data-v="hub:adj"]'); await shot(p + '07e-hub-adj');
+    check('прилагательные: при A1 этапы «значение» и «противоположное»', await js(`[...document.querySelectorAll('[data-act="adj:stage"]')].map(b => b.dataset.v).join(',')`) === 'mean,opp');
+    for (const m of ['quiz', 'type', 'match']) await play('adj', m, `${p}07f-adj-${m}`);
+    await click('[data-act="go"][data-v="ref:adj"]'); await shot(p + '07g-adj-ref');
+    check('таблица прилагательных: big — bigger — the biggest', await js(`document.querySelector('.screen').textContent.includes('the biggest')`));
+    await click('[data-act="go"][data-v="hub:adj"]');
+    // numbers and time: every mode, the dictation too; the table of numbers
+    await click('[data-act="go"][data-v="home"]'); await click('[data-act="go"][data-v="hub:nums"]'); await shot(p + '07b-hub-nums');
+    check('числа: 7 этапов (0–100 … годы)', await js(`document.querySelectorAll('[data-act="nums:stage"]').length`) === 7);
+    for (const m of ['quiz', 'type', 'match', 'dict']) await play('nums', m, `${p}07c-nums-${m}`);
+    await click('[data-act="go"][data-v="ref:nums"]'); await shot(p + '07d-nums-ref');
+    check('таблица чисел: half past six, twenty-first', await js(`(t => t.includes('half past six') && t.includes('twenty-first'))(document.querySelector('.screen').textContent)`));
+    await click('[data-act="go"][data-v="hub:nums"]');
     // phrases: every mode, the dictation too (there is an English voice)
     await click('[data-act="go"][data-v="home"]'); await click('[data-act="go"][data-v="hub:phrases"]'); await shot(p + '08-hub-phrases');
     // the lessons' topics: 10 at A1 and "all"; picking one shows it pressed, "all" unpicks it
@@ -170,7 +184,7 @@ try {
     await click('[data-act="go"][data-v="home"]'); await play('daily', 'daily', p + '11-daily');
     // grammar: from the verbs menu its rules first and open
     await click('[data-act="go"][data-v="hub:verbs"]'); await click('[data-act="go"][data-v="grammar:verbs"]'); await shot(p + '12-grammar-verbs');
-    check('грамматика: 9 правил, правило to be открыто первым', await js(`(() => { const d = [...document.querySelectorAll('details.gram')]; return d.length === 9 && d[0].open && d[0].id === 'g-be'; })()`));
+    check('грамматика: 12 правил, правило to be открыто первым', await js(`(() => { const d = [...document.querySelectorAll('details.gram')]; return d.length === 12 && d[0].open && d[0].id === 'g-be'; })()`));
     await click('[data-act="go"][data-v="hub:verbs"]');
     // the owner's screens
     await click('[data-act="go"][data-v="home"]'); await click('[data-act="go"][data-v="settings"]');
