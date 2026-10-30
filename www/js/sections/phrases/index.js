@@ -36,7 +36,7 @@ export const DIALOGS = DRAW.map(([topic, line, reply, wrong, ru, uk, sk]) =>
   ({ key: 'd:' + line, topic, line, reply, wrong: wrong.split('|').map(s => s.trim()), t: { ru, uk, sk } }));
 
 const tr = P => P.t[getLang()] || '';
-const PROPER = /^(I|I’m|I’d|I’ve|Peter|Anna|Tom|Max|London|Bratislava|Ukraine|Slovakia|English|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)$/;
+const PROPER = /^(I|I’m|I’d|I’ve|Peter|Anna|Tom|Max|Everest|London|Bratislava|Ukraine|Slovakia|English|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)$/;
 // topics 1–10 are A1, in the order of the coursebooks' units; topics from A2_TOPIC on are A2 — asked only at the A2 level (home screen)
 export const TOPICS = [...new Set(RAW.map(r => r[0]))];
 const A2_TOPIC = 11;
