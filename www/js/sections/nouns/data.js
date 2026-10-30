@@ -3,7 +3,9 @@
  * Copyright (c) 2026 Serg. All rights reserved.
  *
  * One row per noun: [singular, plural or '-' (no plural), article a | an (by the first sound), ru, uk, sk, flags]
- * flags: a = A1 (otherwise A2), i = irregular plural. 'an' goes before a vowel sound (an hour), 'a' before a consonant
+ * flags: a = A1 (otherwise A2), i = irregular plural.
+ * A row [n] starts the words of unit n of the A1 coursebook (Navigate A1); the words above those blocks get their
+ * unit from OLD_UNIT (the unit whose topic they belong to). The section menu can train the words of chosen units. 'an' goes before a vowel sound (an hour), 'a' before a consonant
  * sound (a university).
  */
 const RAW = [
@@ -137,12 +139,14 @@ const RAW = [
 ['shoe', 'shoes', 'a', 'туфля, ботинок', 'черевик, туфля', 'topánka', 'a'],
 // the words of the A1 coursebook's units (Navigate A1 wordlist), by unit
 // 1 — hello
+[1],
 ['address', 'addresses', 'an', 'адрес', 'адреса', 'adresa', 'a'],
 ['name', 'names', 'a', 'имя', 'ім’я', 'meno', 'a'],
 ['number', 'numbers', 'a', 'номер; число', 'номер; число', 'číslo', 'a'],
 ['map', 'maps', 'a', 'карта', 'мапа', 'mapa', 'a'],
 ['meeting', 'meetings', 'a', 'встреча, совещание', 'зустріч, нарада', 'stretnutie, porada', 'a'],
 // 2 — things and places, jobs
+[2],
 ['building', 'buildings', 'a', 'здание', 'будівля', 'budova', 'a'],
 ['chef', 'chefs', 'a', 'шеф-повар', 'шеф-кухар', 'šéfkuchár', 'a'],
 ['class', 'classes', 'a', 'класс; урок', 'клас; урок', 'trieda; hodina', 'a'],
@@ -163,6 +167,7 @@ const RAW = [
 ['wallet', 'wallets', 'a', 'бумажник', 'гаманець', 'peňaženka', 'a'],
 ['object', 'objects', 'an', 'предмет', 'предмет', 'predmet', 'a'],
 // 3 — family and possessions
+[3],
 ['bedroom', 'bedrooms', 'a', 'спальня', 'спальня', 'spálňa', 'a'],
 ['bicycle', 'bicycles', 'a', 'велосипед', 'велосипед', 'bicykel', 'a'],
 ['daughter', 'daughters', 'a', 'дочь', 'донька', 'dcéra', 'a'],
@@ -185,6 +190,7 @@ const RAW = [
 ['toilet', 'toilets', 'a', 'туалет', 'туалет', 'toaleta', 'a'],
 ['village', 'villages', 'a', 'деревня', 'село', 'dedina', 'a'],
 // 4 — my life, transport
+[4],
 ['beach', 'beaches', 'a', 'пляж', 'пляж', 'pláž', 'a'],
 ['bookshop', 'bookshops', 'a', 'книжный магазин', 'книгарня', 'kníhkupectvo', 'a'],
 ['customer', 'customers', 'a', 'покупатель, клиент', 'покупець, клієнт', 'zákazník', 'a'],
@@ -200,6 +206,7 @@ const RAW = [
 ['dollar', 'dollars', 'a', 'доллар', 'долар', 'dolár', 'a'],
 ['writer', 'writers', 'a', 'писатель', 'письменник', 'spisovateľ', 'a'],
 // 5 — style and design: the body, clothes, colours
+[5],
 ['adult', 'adults', 'an', 'взрослый', 'дорослий', 'dospelý', 'a'],
 ['body', 'bodies', 'a', 'тело', 'тіло', 'telo', 'a'],
 ['cinema', 'cinemas', 'a', 'кинотеатр', 'кінотеатр', 'kino', 'a'],
@@ -221,6 +228,7 @@ const RAW = [
 ['swimming pool', 'swimming pools', 'a', 'бассейн', 'басейн', 'bazén', 'a'],
 ['hair', '-', 'a', 'волосы', 'волосся', 'vlasy', 'a'],
 // 6 — places and facilities: the home, the hotel, the town
+[6],
 ['balcony', 'balconies', 'a', 'балкон', 'балкон', 'balkón', 'a'],
 ['bathroom', 'bathrooms', 'a', 'ванная', 'ванна кімната', 'kúpeľňa', 'a'],
 ['bakery', 'bakeries', 'a', 'пекарня', 'пекарня', 'pekáreň', 'a'],
@@ -245,6 +253,7 @@ const RAW = [
 ['pizza', 'pizzas', 'a', 'пицца', 'піца', 'pizza', 'a'],
 ['lift', 'lifts', 'a', 'лифт', 'ліфт', 'výťah', 'a'],
 // 7 — skills and interests
+[7],
 ['bottle', 'bottles', 'a', 'бутылка', 'пляшка', 'fľaša', 'a'],
 ['dolphin', 'dolphins', 'a', 'дельфин', 'дельфін', 'delfín', 'a'],
 ['hobby', 'hobbies', 'a', 'хобби', 'хобі', 'záľuba', 'a'],
@@ -257,6 +266,7 @@ const RAW = [
 ['volunteer', 'volunteers', 'a', 'волонтёр', 'волонтер', 'dobrovoľník', 'a'],
 ['advert', 'adverts', 'an', 'реклама (объявление)', 'реклама (оголошення)', 'reklama', 'a'],
 // 8 — our past
+[8],
 ['accident', 'accidents', 'an', 'авария, несчастный случай', 'аварія, нещасний випадок', 'nehoda', 'a'],
 ['actress', 'actresses', 'an', 'актриса', 'акторка', 'herečka', 'a'],
 ['adventure', 'adventures', 'an', 'приключение', 'пригода', 'dobrodružstvo', 'a'],
@@ -270,6 +280,7 @@ const RAW = [
 ['scientist', 'scientists', 'a', 'учёный', 'науковець', 'vedec', 'a'],
 ['story', 'stories', 'a', 'история, рассказ', 'історія, оповідання', 'príbeh', 'a'],
 // 9 — unusual stories, the weather
+[9],
 ['bill', 'bills', 'a', 'счёт', 'рахунок', 'účet', 'a'],
 ['comedian', 'comedians', 'a', 'комик', 'комік', 'komik', 'a'],
 ['event', 'events', 'an', 'событие', 'подія', 'udalosť', 'a'],
@@ -285,6 +296,7 @@ const RAW = [
 ['waitress', 'waitresses', 'a', 'официантка', 'офіціантка', 'čašníčka', 'a'],
 ['weather', '-', 'a', 'погода', 'погода', 'počasie', 'a'],
 // 10 — new places, new projects: food and drink, plans
+[10],
 ['biscuit', 'biscuits', 'a', 'печенье', 'печиво', 'keks, sušienka', 'a'],
 ['burger', 'burgers', 'a', 'бургер', 'бургер', 'hamburger', 'a'],
 ['croissant', 'croissants', 'a', 'круассан', 'круасан', 'croissant', 'a'],
@@ -300,9 +312,30 @@ const RAW = [
 ['food', '-', 'a', 'еда', 'їжа', 'jedlo', 'a'],
 ];
 
-export const NOUNS = RAW.map(([n, pl, art, ru, uk, sk, fl]) => ({
-  n, pl: pl === '-' ? null : pl, art, t: { ru, uk, sk }, a: fl.includes('a'), irr: fl.includes('i'),
-}));
+/** The unit of the A1 coursebook for the words written before the unit blocks. */
+const OLD_UNIT = {
+  1: 'teacher student doctor engineer actor artist country holiday',
+  2: 'book pen pencil bag computer phone photo umbrella key box glass clock watch city town street bus car train airport office hospital hotel museum university ticket idea question answer exercise letter email job uniform',
+  3: 'man woman child person boy girl baby friend brother sister wife husband family uncle aunt neighbour house flat room',
+  4: 'day week hour minute evening',
+  5: 'foot tooth hand eye ear arm dress jacket shoe',
+  6: 'kitchen door window table chair bed shelf oven shop bank church park bridge island',
+  7: 'dog cat horse mouse sheep fish bird elephant animal piano toy',
+  8: 'month year life party',
+  9: 'leaf knife',
+  10: 'apple orange egg banana tomato potato sandwich cake onion water milk bread dish',
+};
+const unitOf = { 'ice cream': 10 };
+for (const [u, words] of Object.entries(OLD_UNIT)) for (const w of words.split(' ')) unitOf[w] = +u;
+
+export const NOUNS = [];
+let unit = 0;
+for (const r of RAW) {
+  if (r.length === 1) { unit = r[0]; continue; }
+  const [n, pl, art, ru, uk, sk, fl] = r;
+  NOUNS.push({ n, pl: pl === '-' ? null : pl, art, t: { ru, uk, sk }, a: fl.includes('a'), irr: fl.includes('i'), u: unit || unitOf[n] || 0 });
+}
+export const UNITS = [...new Set(NOUNS.map(W => W.u))].sort((a, b) => a - b);
 
 /** Plurals a learner might write: the plain -s, -es, -ies, the apostrophe (apple’s), and the regular form of an irregular noun. */
 export function wrongPlurals(W) {

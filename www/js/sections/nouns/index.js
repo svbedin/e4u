@@ -5,7 +5,7 @@
  * Implements the section contract described in ARCHITECTURE.md. Every form comes from data.js;
  * the wrong plurals are the mistakes learners make (childs, tomatos, knifes, babys).
  */
-import { NOUNS, wrongPlurals } from './data.js';
+import { NOUNS, UNITS, wrongPlurals } from './data.js';
 import strings from './strings.js';
 import { T, getLang } from '../../core/i18n.js';
 import { rnd, shuf, esc } from '../../core/util.js';
@@ -21,9 +21,14 @@ const inLevel = () => (getProfile().level === 'a1' ? NOUNS.filter(W => W.a) : NO
 // uncountable nouns (water, milk) take no a / an and have no plural: they wait for "some / any"
 const fits = (W, s) => !!W.pl;
 
+// the units of the coursebook picked in the section menu (none picked — all words of the level)
+const inUnits = st => { const on = (st && st.units) || []; return inLevel().filter(W => !on.length || on.includes(W.u)); };
+
 function pool(st, review, ok) {
   if (review) { const keys = Object.keys(st.mist); const p = NOUNS.filter(W => keys.includes(W.n) && ok(W)); if (p.length) return p; }
-  return inLevel().filter(ok);
+  // too few words in the units picked for this task (pairs need six): all words of the level
+  const p = inUnits(st).filter(ok);
+  return p.length >= 6 ? p : inLevel().filter(ok);
 }
 const chips = s => [{ label: STAGE_EN[s] }, { label: T(STAGE_KEY[s]), kind: 'ghost' }];
 
@@ -45,22 +50,31 @@ export default {
   titleKey: 'nounsT',
   descKey: 'nounsD',
   strings,
-  defaults: { stages: [...STAGES], best: {}, mist: {} },
+  defaults: { stages: [...STAGES], units: [], best: {}, mist: {} },
   modes: ['quiz', 'type', 'match', 'blitz'],
 
   normalize(st) {
     st.stages = (st.stages || []).filter(s => STAGES.includes(s));
     if (!st.stages.length) st.stages = [...STAGES];
+    st.units = (st.units || []).filter(u => UNITS.includes(u));
   },
 
   settingsHTML(st) {
     const chip = s => `<button class="chip" data-act="nouns:stage" data-v="${s}" aria-pressed="${st.stages.includes(s)}">${STAGE_EN[s]}<br><small>${T(STAGE_KEY[s])}</small></button>`;
-    return `<div class="group"><span class="label">${T('nStages')}</span><div class="chips">${STAGES.map(chip).join('')}</div></div>`;
+    // the words of the coursebook's units, like the lessons' topics in "Phrases"
+    const unit = u => `<button class="chip" data-act="nouns:unit" data-v="${u}" aria-pressed="${st.units.includes(u)}">${u}. ${T('nUnit' + u)}</button>`;
+    return `<div class="group"><span class="label">${T('nStages')}</span><div class="chips">${STAGES.map(chip).join('')}</div></div>
+      <div class="group"><span class="label">${T('nUnits')}</span><div class="chips"><button class="chip" data-act="nouns:unit" data-v="0" aria-pressed="${!st.units.length}">${T('nAllUnits')}</button>${UNITS.map(unit).join('')}</div></div>`;
   },
 
   summary() { return `${T('nWords')}: <b>${inLevel().filter(W => W.pl).length}</b> · ${getProfile().level === 'a2' ? 'A1–A2' : 'A1'}`; },
 
   init({ on, st, save, rerender }) {
+    on('nouns:unit', v => {
+      const s = st(), u = Number(v), i = s.units.indexOf(u);
+      if (!u) s.units = []; else if (i >= 0) s.units.splice(i, 1); else s.units.push(u);
+      save(); rerender();
+    });
     on('nouns:stage', v => { const s = st(), i = s.stages.indexOf(v); if (i >= 0) { if (s.stages.length > 1) s.stages.splice(i, 1); } else s.stages.push(v); save(); rerender(); });
   },
 

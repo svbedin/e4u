@@ -5,7 +5,7 @@
  * When you publish a new version: bump CACHE and keep SHELL in sync with the files
  * (README → "Обновление версии").
  */
-const CACHE = 'e4u-v5';
+const CACHE = 'e4u-v6';
 const SHELL = ['./', './css/app.css', './css/fonts.css', './fonts/Manrope-Variable.ttf', './fonts/OFL-Manrope.txt', './fonts/OFL-Unbounded.txt', './fonts/Unbounded-Variable.ttf', './icons/favicon-32.png', './icons/icon-192.png', './icons/icon-512.png', './index.html', './js/config.js', './js/core/errors.js', './js/core/i18n.js', './js/core/push.js', './js/core/router.js', './js/core/sound.js', './js/core/speech.js', './js/core/store.js', './js/core/ui.js', './js/core/util.js', './js/games/engine.js', './js/main.js', './js/pwa.js', './js/screens/admin.js', './js/screens/grammar-data.js', './js/screens/grammar.js', './js/screens/privacy.js', './js/screens/report.js', './js/screens/screens.js', './js/screens/stats.js', './js/screens/tournament.js', './js/sections/adj/data.js', './js/sections/adj/index.js', './js/sections/adj/strings.js', './js/sections/daily/index.js', './js/sections/daily/strings.js', './js/sections/nouns/data.js', './js/sections/nouns/index.js', './js/sections/nouns/strings.js', './js/sections/nums/data.js', './js/sections/nums/index.js', './js/sections/nums/strings.js', './js/sections/phrases/data.js', './js/sections/phrases/index.js', './js/sections/phrases/strings.js', './js/sections/pron/data.js', './js/sections/pron/index.js', './js/sections/pron/strings.js', './js/sections/registry.js', './js/sections/verbs/data.js', './js/sections/verbs/index.js', './js/sections/verbs/strings.js', './manifest.webmanifest'];
 
 self.addEventListener('install', e => {

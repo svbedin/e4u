@@ -38,7 +38,11 @@ for (const V of VERBS) {
 }
 
 // ---- 2. nouns ----
-const { NOUNS, wrongPlurals } = await import('../www/js/sections/nouns/data.js');
+const { NOUNS, UNITS, wrongPlurals } = await import('../www/js/sections/nouns/data.js');
+// every noun belongs to a unit of the coursebook, every unit has a name in every language
+const nStr = (await import('../www/js/sections/nouns/strings.js')).default;
+for (const W of NOUNS) if (!W.u) bad(`существительное «${W.n}»`, 'не указан урок (OLD_UNIT в nouns/data.js)');
+for (const u of UNITS) for (const l of LANGS) if (!nStr[l]?.['nUnit' + u]) bad(`урок ${u} (существительные)`, `нет названия (${l})`);
 const ns = new Set();
 for (const W of NOUNS) {
   const w = `существительное «${W.n}»`;
@@ -127,6 +131,8 @@ for (const D of DIALOGS) {
 const SECTIONS = {
   verbs: [(await import('../www/js/sections/verbs/index.js')).default, { stages: [...STAGES], mist: {} }],
   nouns: [(await import('../www/js/sections/nouns/index.js')).default, { stages: ['art', 'pl'], mist: {} }],
+  // the words of one unit only
+  'nouns-unit': [(await import('../www/js/sections/nouns/index.js')).default, { stages: ['art', 'pl'], units: [1], mist: {} }],
   phrases: [(await import('../www/js/sections/phrases/index.js')).default, { mist: {} }],
   // lesson topics picked: 2 and 11 (11 is A2 — at A1 only topic 2 is asked)
   adj: [(await import('../www/js/sections/adj/index.js')).default, { stages: ['mean', 'opp', 'comp', 'sup'], mist: {} }],
@@ -149,7 +155,7 @@ for (const level of ['a1', 'a2']) {
       q = q.then ? q.then() : null;
     }
   }
-  for (const id of ['verbs', 'nouns', 'adj', 'pron', 'nums']) { const [S, st] = SECTIONS[id]; const m = S.matchSet(st, {}); if (m.pairs.length < 4) bad(`${id} (пары)`, `пар ${m.pairs.length}`); }
+  for (const id of ['verbs', 'nouns', 'nouns-unit', 'adj', 'pron', 'nums']) { const [S, st] = SECTIONS[id]; const m = S.matchSet(st, {}); if (m.pairs.length < 4) bad(`${id} (пары)`, `пар ${m.pairs.length}`); }
 }
 
 // ---- 6. translations ----

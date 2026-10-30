@@ -151,7 +151,12 @@ try {
     await click('[data-act="go"][data-v="hub:verbs"]');
     // nouns
     await click('[data-act="go"][data-v="home"]'); await click('[data-act="go"][data-v="hub:nouns"]'); await shot(p + '05-hub-nouns');
+    check('существительные: «Все слова» и 10 уроков', await js(`document.querySelectorAll('[data-act="nouns:unit"]').length`) === 11);
+    await click('[data-act="nouns:unit"][data-v="3"]');
+    check('существительные: урок 3 выбран', await js(`document.querySelector('[data-act="nouns:unit"][data-v="3"]').getAttribute('aria-pressed')`) === 'true');
+    await shot(p + '05b-hub-nouns-unit');
     for (const m of ['quiz', 'type', 'match']) await play('nouns', m, `${p}06-nouns-${m}`);
+    await click('[data-act="nouns:unit"][data-v="0"]');
     await click('[data-act="go"][data-v="ref:nouns"]'); await shot(p + '07-nouns-ref');
     await click('[data-act="go"][data-v="hub:nouns"]');
     // adjectives: at A1 the meaning and opposites only (the comparison is A2); every mode; the table
