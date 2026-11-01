@@ -1,5 +1,14 @@
 # История версий E4U
 
+## 1.0.0 — 01.11.2026
+
+Первая полная версия: уровни A1 и A2 собраны целиком.
+
+- **Фразовые глаголы (A2) — тема фраз 18:** put on, take off, wake up, hurry up, fill in, pick up, turn on / off, sit down,
+  stand up, look for, look after, get off, write down, fall asleep, grow up, try on, take care of — 18 предложений.
+- **Связки (A2) — тема фраз 19:** because, so, although, until, unless, however, instead, as soon as, while, for example,
+  before, still, finally, besides — 14 предложений. Фраз всего 285 (было 253).
+
 ## 0.12.0 — 01.11.2026
 
 - **Новый раздел «Мой учебник»** (первый на главной): выбираешь учебник и урок, который сейчас проходишь, — и тренируешь

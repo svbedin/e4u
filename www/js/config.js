@@ -4,7 +4,7 @@
  */
 export const APP = {
   name: 'E4U',
-  version: '0.12.0',
+  version: '1.0.0',
   /** identifier for App Store / Google Play (must match capacitor.config.json) */
   appId: 'win.slovko.e4u',
   /** future cloud accounts: fill in when Supabase / Firebase is connected */

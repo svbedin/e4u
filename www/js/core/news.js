@@ -14,24 +14,21 @@ import { esc } from './util.js';
 import { on, render, currentScreen } from './router.js';
 
 export const NEWS = {
-  v: '0.12.0',
+  v: '1.0.0',
   ru: [
-    "Мой учебник: слова и грамматика урока, который ты сейчас проходишь (Complete Key for Schools, уроки 1–4).",
-    "Новые слова A2: 6 уроков существительных (тело и здоровье, покупки, город, работа, дом, аэропорт), 34 глагола и 47 прилагательных.",
-    "Наречия: slow → slowly, good → well — новый этап в «Прилагательных».",
-    "Новая версия включается кнопкой «Обновить сейчас».",
+    "E4U 1.0: уровни A1 и A2 собраны целиком.",
+    "Фразовые глаголы (put on, look for, get off) и связки (because, although, until) — новые темы фраз A2.",
+    "Мой учебник: Complete Key for Schools, уроки 1–4 — слова и грамматика урока.",
   ],
   sk: [
-    "Moja učebnica: slovíčka a gramatika lekcie, ktorú práve preberáš (Complete Key for Schools, lekcie 1–4).",
-    "Nové slová A2: 6 lekcií podstatných mien (telo a zdravie, nákupy, mesto, práca, domov, letisko), 34 slovies a 47 prídavných mien.",
-    "Príslovky: slow → slowly, good → well — nová etapa v „Prídavných menách“.",
-    "Novú verziu zapnete tlačidlom „Aktualizovať teraz“.",
+    "E4U 1.0: úrovne A1 a A2 sú kompletné.",
+    "Frázové slovesá (put on, look for, get off) a spojky (because, although, until) — nové témy fráz A2.",
+    "Moja učebnica: Complete Key for Schools, lekcie 1–4 — slovíčka a gramatika lekcie.",
   ],
   uk: [
-    "Мій підручник: слова й граматика уроку, який ти зараз проходиш (Complete Key for Schools, уроки 1–4).",
-    "Нові слова A2: 6 уроків іменників (тіло й здоров’я, покупки, місто, робота, дім, аеропорт), 34 дієслова і 47 прикметників.",
-    "Прислівники: slow → slowly, good → well — новий етап у «Прикметниках».",
-    "Нову версію вмикає кнопка «Оновити зараз».",
+    "E4U 1.0: рівні A1 і A2 зібрано повністю.",
+    "Фразові дієслова (put on, look for, get off) і сполучники (because, although, until) — нові теми фраз A2.",
+    "Мій підручник: Complete Key for Schools, уроки 1–4 — слова й граматика уроку.",
   ],
 };
 

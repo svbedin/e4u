@@ -10,7 +10,7 @@
  * 10 plans and the cafe — going to, would like, on / in / at. Topics 11–17 are A2 (A2_TOPIC in index.js), in the order
  * of Navigate A2 units 5, 7–12: 11 now — Present Continuous, could, 12 health and sport — Past Simple, 13 travel — should,
  * have to, 14 cooking — much / many, a few / a little, 15 the world around us — comparatives, 16 working together —
- * going to, to + verb, 17 culture — Present Perfect:
+ * going to, to + verb, 17 culture — Present Perfect; 18 phrasal verbs, 19 linking words (the A2 word list):
  * [topic, English phrase, ru, uk, sk, word order]
  * A gap in the phrase: {answer|hint|wrong,wrong,wrong}. The hint is English (pronoun · infinitive, or the basic form)
  * or empty when the translation decides. The wrong forms must be wrong for this translation: "Find the mistake"
@@ -281,6 +281,40 @@ export const RAW = [
 [17, 'Have you ever {been|be|was,went} to London?', 'Ты когда-нибудь был в Лондоне?', 'Ти коли-небудь був у Лондоні?', 'Bol si už niekedy v Londýne?', ''],
 [17, 'I {have|I · have|has,am} seen this film three times.', 'Я видел этот фильм три раза.', 'Я бачив цей фільм тричі.', 'Ten film som videl trikrát.', '-'],
 [17, 'She {has|she · have|have,is} never been to Paris.', 'Она никогда не была в Париже.', 'Вона ніколи не була в Парижі.', 'Nikdy nebola v Paríži.', ''],
+// 18 — phrasal verbs (A2 word list): put on, take off, look for, get off …
+[18, 'Put {on||off,in,out} your coat, it’s cold outside.', 'Надень пальто, на улице холодно.', 'Одягни пальто, надворі холодно.', 'Obleč si kabát, vonku je zima.', '-'],
+[18, 'Take {off||on,up,in} your shoes, please.', 'Сними обувь, пожалуйста.', 'Зніми взуття, будь ласка.', 'Vyzuj si topánky, prosím.', '-'],
+[18, 'I wake {up||on,off,out} at seven every day.', 'Я просыпаюсь в семь каждый день.', 'Я прокидаюся о сьомій щодня.', 'Každý deň sa budím o siedmej.', '-'],
+[18, 'Hurry {up||on,off,down}! We are late.', 'Поторопись! Мы опаздываем.', 'Поспішай! Ми запізнюємося.', 'Ponáhľaj sa! Meškáme.', '-'],
+[18, 'Please fill {in||on,up,off} this form.', 'Пожалуйста, заполни эту анкету.', 'Будь ласка, заповни цю анкету.', 'Prosím, vyplň tento formulár.', '-'],
+[18, 'Can you pick {up||on,off,in} the phone?', 'Можешь взять трубку?', 'Можеш узяти слухавку?', 'Môžeš zdvihnúť telefón?', '-'],
+[18, 'Turn {off||on,in,at} the light, please.', 'Выключи свет, пожалуйста.', 'Вимкни світло, будь ласка.', 'Zhasni svetlo, prosím.', '-'],
+[18, 'Turn {on||off,in,at} the TV, please.', 'Включи телевизор, пожалуйста.', 'Увімкни телевізор, будь ласка.', 'Zapni telku, prosím.', '-'],
+[18, 'Sit {down||up,on,off}, please.', 'Садитесь, пожалуйста.', 'Сідайте, будь ласка.', 'Sadnite si, prosím.', '-'],
+[18, 'Stand {up||down,on,off} when the teacher comes in.', 'Вставай, когда входит учитель.', 'Вставай, коли заходить учитель.', 'Postav sa, keď vojde učiteľ.', '-'],
+[18, 'I’m looking {for||at,after,up} my keys.', 'Я ищу свои ключи.', 'Я шукаю свої ключі.', 'Hľadám kľúče.', '-'],
+[18, 'She looks {after||for,at,up} her little brother.', 'Она присматривает за младшим братом.', 'Вона доглядає за молодшим братом.', 'Stará sa o mladšieho brata.', '-'],
+[18, 'We get {off||on,out,up} the bus at the next stop.', 'Мы выходим из автобуса на следующей остановке.', 'Ми виходимо з автобуса на наступній зупинці.', 'Z autobusu vystupujeme na ďalšej zastávke.', '-'],
+[18, 'Write {down||up,on,off} the new words.', 'Запиши новые слова.', 'Запиши нові слова.', 'Zapíš si nové slová.', '-'],
+[18, 'I often fall {asleep||sleep,sleeping,slept} in front of the TV.', 'Я часто засыпаю перед телевизором.', 'Я часто засинаю перед телевізором.', 'Často zaspím pred telkou.', '-'],
+[18, 'My grandparents grew {up||on,out,down} in a small village.', 'Мои бабушка и дедушка выросли в маленькой деревне.', 'Мої бабуся й дідусь виросли в маленькому селі.', 'Moji starí rodičia vyrástli v malej dedine.', '-'],
+[18, 'You can try {on||in,off,at} this jacket.', 'Можешь примерить эту куртку.', 'Можеш приміряти цю куртку.', 'Môžeš si vyskúšať túto bundu.', '-'],
+[18, 'Take care {of||for,on,at} yourself!', 'Береги себя!', 'Бережи себе!', 'Dávaj na seba pozor!', '-'],
+// 19 — linking words (A2 word list): because, so, although, until, unless, however …
+[19, 'I stayed at home {because||so,but,although} I was ill.', 'Я остался дома, потому что болел.', 'Я залишився вдома, бо хворів.', 'Zostal som doma, pretože som bol chorý.', '-'],
+[19, 'It was raining, {so||because,although,until} we took a taxi.', 'Шёл дождь, поэтому мы взяли такси.', 'Ішов дощ, тож ми взяли таксі.', 'Pršalo, tak sme si vzali taxík.', '-'],
+[19, '{Although||Because,So,Until} it was cold, we went to the beach.', 'Хотя было холодно, мы пошли на пляж.', 'Хоча було холодно, ми пішли на пляж.', 'Hoci bola zima, išli sme na pláž.', '-'],
+[19, 'I’ll wait {until||unless,although,because} you come back.', 'Я подожду, пока ты не вернёшься.', 'Я почекаю, поки ти не повернешся.', 'Počkám, kým sa nevrátiš.', '-'],
+[19, 'You won’t pass the exam {unless||until,because,so} you study.', 'Ты не сдашь экзамен, если не будешь заниматься.', 'Ти не складеш іспит, якщо не вчитимешся.', 'Neurobíš skúšku, ak sa nebudeš učiť.', '-'],
+[19, 'I like tea. {However||Because,Unless,Until}, I don’t drink it in the evening.', 'Я люблю чай. Однако вечером я его не пью.', 'Я люблю чай. Однак увечері я його не п’ю.', 'Mám rád čaj. Večer ho však nepijem.', '-'],
+[19, 'We didn’t go to the park. We stayed at home {instead||however,anyway,until}.', 'Мы не пошли в парк. Вместо этого мы остались дома.', 'Ми не пішли в парк. Натомість ми залишилися вдома.', 'Nešli sme do parku. Namiesto toho sme zostali doma.', '-'],
+[19, 'Call me {as soon as||until,unless,although} you arrive.', 'Позвони мне, как только приедешь.', 'Подзвони мені, щойно приїдеш.', 'Zavolaj mi, hneď ako prídeš.', '-'],
+[19, 'I listen to music {while||until,unless,so} I do my homework.', 'Я слушаю музыку, пока делаю домашнее задание.', 'Я слухаю музику, поки роблю домашнє завдання.', 'Počúvam hudbu, kým si robím domácu úlohu.', '-'],
+[19, 'I like many sports, {for example||however,instead,anyway} tennis and swimming.', 'Я люблю многие виды спорта, например теннис и плавание.', 'Я люблю багато видів спорту, наприклад теніс і плавання.', 'Mám rád veľa športov, napríklad tenis a plávanie.', '-'],
+[19, 'Wash your hands {before||after,until,unless} you eat.', 'Мой руки перед едой.', 'Мий руки перед їжею.', 'Umývaj si ruky pred jedlom.', '-'],
+[19, 'It was late, but she {still||yet,already,ever} wasn’t at home.', 'Было поздно, но её всё ещё не было дома.', 'Було пізно, але її все ще не було вдома.', 'Bolo neskoro, ale stále nebola doma.', '-'],
+[19, 'We waited for an hour, and {finally||still,ever,yet} the bus came.', 'Мы ждали час, и наконец пришёл автобус.', 'Ми чекали годину, і нарешті прийшов автобус.', 'Čakali sme hodinu a nakoniec prišiel autobus.', '-'],
+[19, 'I haven’t got a car. {Besides||Unless,Until,Although}, I can’t drive.', 'У меня нет машины. Кроме того, я не умею водить.', 'У мене немає машини. До того ж я не вмію водити.', 'Nemám auto. Okrem toho neviem šoférovať.', '-'],
 [17, 'We have {written|write|wrote,writed} a song.', 'Мы написали песню.', 'Ми написали пісню.', 'Napísali sme pieseň.', ''],
 [17, '{Have|you|Did,Has} you ever met a famous person?', 'Ты когда-нибудь встречал знаменитость?', 'Ти колись зустрічав відому людину?', 'Stretol si už niekedy niekoho slávneho?', ''],
 [17, 'He {hasn’t|he · not have|haven’t,didn’t} finished his homework yet.', 'Он ещё не сделал домашнее задание.', 'Він ще не зробив домашнє завдання.', 'Ešte nedokončil domácu úlohu.', ''],
