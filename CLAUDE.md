@@ -69,6 +69,7 @@ worker/                       сервер Cloudflare (вход, тестеры,
 npm start          локальный сервер: http://localhost:8080 (если занят Slovko — PORT=8095 npm start)
 npm test           проверка данных и переводов + офлайн-тест сервера
 npm run screens    снимки экранов на 390 px, светлая/тёмная тема, ru / sk / uk (screens:quick — светлая, ru)
+npm run devices    снимки и проверки на планшетах и компьютерах (768×1024 … 1920×1080); по одной с screens — нужна память
 npm run release    новый номер офлайн-кэша и список файлов в www/sw.js
 npm run deploy     выложить на Cloudflare (после настройки по README.md)
 npm run vapid      ключи напоминаний (запускает владелец, один раз)

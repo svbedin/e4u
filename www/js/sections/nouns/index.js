@@ -21,6 +21,7 @@ const inLevel = () => (getProfile().level === 'a1' ? NOUNS.filter(W => W.a) : NO
 // uncountable nouns (water, milk) take no a / an and have no plural: they wait for "some / any"
 const fits = (W, s) => !!W.pl;
 
+let unitsOpen = false;  // the unit chips in the section menu are folded until opened
 // the units of the coursebook picked in the section menu (none picked — all words of the level)
 const inUnits = st => { const on = (st && st.units) || []; return inLevel().filter(W => !on.length || on.includes(W.u)); };
 
@@ -63,8 +64,10 @@ export default {
     const chip = s => `<button class="chip" data-act="nouns:stage" data-v="${s}" aria-pressed="${st.stages.includes(s)}">${STAGE_EN[s]}<br><small>${T(STAGE_KEY[s])}</small></button>`;
     // the words of the coursebook's units, like the lessons' topics in "Phrases"
     const unit = u => `<button class="chip" data-act="nouns:unit" data-v="${u}" aria-pressed="${st.units.includes(u)}">${u}. ${T('nUnit' + u)}</button>`;
+    const units = st.units.slice().sort((a, b) => a - b).join(', ');
     return `<div class="group"><span class="label">${T('nStages')}</span><div class="chips">${STAGES.map(chip).join('')}</div></div>
-      <div class="group"><span class="label">${T('nUnits')}</span><div class="chips"><button class="chip" data-act="nouns:unit" data-v="0" aria-pressed="${!st.units.length}">${T('nAllUnits')}</button>${UNITS.filter(u => inLevel().some(W => W.u === u)).map(unit).join('')}</div></div>`;
+      <div class="group"><button class="fold" data-act="nouns:fold" aria-expanded="${unitsOpen}"><span class="label">${T('nUnits')}</span><b>${units || T('nAllUnits')}</b></button>${unitsOpen
+        ? `<div class="chips"><button class="chip" data-act="nouns:unit" data-v="0" aria-pressed="${!st.units.length}">${T('nAllUnits')}</button>${UNITS.filter(u => inLevel().some(W => W.u === u)).map(unit).join('')}</div>` : ''}</div>`;
   },
 
   summary() { return `${T('nWords')}: <b>${inLevel().filter(W => W.pl).length}</b> · ${getProfile().level === 'a2' ? 'A1–A2' : 'A1'}`; },
@@ -75,6 +78,7 @@ export default {
       if (!u) s.units = []; else if (i >= 0) s.units.splice(i, 1); else s.units.push(u);
       save(); rerender();
     });
+    on('nouns:fold', () => { unitsOpen = !unitsOpen; rerender(); });
     on('nouns:stage', v => { const s = st(), i = s.stages.indexOf(v); if (i >= 0) { if (s.stages.length > 1) s.stages.splice(i, 1); } else s.stages.push(v); save(); rerender(); });
   },
 

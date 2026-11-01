@@ -90,6 +90,7 @@ t('forged signature -> 401', await req('GET', '/api/me', { token: await jwt(clai
 t('wrong audience -> 401', await req('GET', '/api/me', { token: await jwt({ ...claims('owner@example.com'), aud: ['zzz'] }) }), '401');
 t('expired -> 401', await req('GET', '/api/me', { token: await jwt({ ...claims('owner@example.com'), exp: 1 }) }), '401');
 t('owner is admin', await req('GET', '/api/me', { token: owner }), '"admin":true');
+t('sign in again: back to the app', await req('GET', '/api/signin', { token: owner }), '302');
 t('tester is not admin', await req('GET', '/api/me', { token: friend }), '"admin":false');
 
 // testers list

@@ -10,12 +10,12 @@ import { fmtTime, esc } from '../core/util.js';
 import { SECTIONS, getSection, sectionStateOf } from '../sections/registry.js';
 import { installUI } from '../pwa.js';
 import { tournamentCard } from './tournament.js';
-import { adminLink } from './admin.js';
+import { adminLink, signinBanner } from './admin.js';
 import { APP } from '../config.js';
 import { canSpeak, voiceList } from '../core/speech.js';
 import { writeAuthorLink } from './report.js';
 import { dailyCard } from '../sections/daily/index.js';
-import { pushState, enableReminder, disableReminder, TIMES as PUSH_TIMES } from '../core/push.js';
+import { pushState, enableReminder, disableReminder } from '../core/push.js';
 import { grammarFor } from './grammar.js';
 
 /* ---------- home ---------- */
@@ -29,6 +29,7 @@ register('home', () => `<div class="screen">
       `<button data-act="level" data-v="${l}" aria-pressed="${getProfile().level === l}">${l.toUpperCase()}</button>`).join('')}
       <button disabled aria-disabled="true" class="later">B1 <small>${T('soon')}</small></button></div>
     <small style="color:var(--muted)">${T('cefrD')}</small></div>
+  ${signinBanner()}
   ${dailyCard()}
   <div class="cards">${SECTIONS.filter(s => !s.hidden).map(s => s.soon
     ? `<div class="sect soon" aria-disabled="true"><span class="glyph">${s.glyph}</span><span class="grow"><b>${T(s.titleKey)}</b></span><span class="pill">${T('soon')}</span></div>`
@@ -68,26 +69,56 @@ function voiceRow() {
 }
 
 /** The reminder of the daily training (push): a switch and the time; on an iPhone outside the home screen, how to get it. */
-let remindMsg = '', remindBusy = false;
+let remindMsg = '', remindBusy = false, remindPick = '';
+const WHEEL_H = Array.from({ length: 18 }, (_, i) => String(6 + i).padStart(2, '0')), WHEEL_M = ['00', '15', '30', '45'], WHEEL_ROW = 44;
+const wheelCol = (kind, items, v) => `<div class="wheel-col" tabindex="0" data-wheel="${kind}" aria-label="${T(kind === 'h' ? 'remindH' : 'remindM')}" aria-valuetext="${v}" role="spinbutton">
+  ${items.map(x => `<div class="wheel-item" data-v="${x}">${x}</div>`).join('')}</div>`;
+/** After the settings are drawn: each wheel turned to the chosen time; when both stand still, the time is saved. */
+function mountWheel() {
+  const box = document.querySelector('.wheel');
+  if (!box) return;
+  const cols = [...box.querySelectorAll('.wheel-col')], val = c => c.children[Math.max(0, Math.min(c.children.length - 1, Math.round(c.scrollTop / WHEEL_ROW)))].dataset.v;
+  const [h, m] = box.dataset.time.split(':');
+  cols.forEach(c => { const i = [...c.children].findIndex(x => x.dataset.v === (c.dataset.wheel === 'h' ? h : m)); c.scrollTop = Math.max(0, i) * WHEEL_ROW; });
+  let timer = 0;
+  const settle = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      cols.forEach(c => c.setAttribute('aria-valuetext', val(c)));
+      const t = `${val(cols[0])}:${val(cols[1])}`;
+      if (t === box.dataset.time || remindBusy || !document.body.contains(box)) return;
+      remindPick = t;
+      reminderDo(() => enableReminder(t));
+    }, 700);
+  };
+  cols.forEach(c => {
+    c.addEventListener('scroll', settle, { passive: true });
+    c.addEventListener('click', ev => { const it = ev.target.closest('.wheel-item'); if (it) c.scrollTo({ top: [...c.children].indexOf(it) * WHEEL_ROW, behavior: 'smooth' }); });
+    c.addEventListener('keydown', ev => {
+      const d = { ArrowUp: -1, ArrowDown: 1 }[ev.key];
+      if (d) { ev.preventDefault(); c.scrollTo({ top: (Math.round(c.scrollTop / WHEEL_ROW) + d) * WHEEL_ROW, behavior: 'smooth' }); }
+    });
+  });
+}
 function reminderBox() {
-  const R = getProfile().remind || { on: false, time: '19:00' }, state = pushState();
+  const R = getProfile().remind || { on: false, time: '19:00' }, state = pushState(), time = remindPick || R.time || '19:00';
+  if (state === 'ok' && R.on) setTimeout(mountWheel);  // after the screen is in the page
   const hint = state === 'install' ? 'remindInstall' : state === 'denied' ? 'remindDenied' : state === 'no' ? 'remindNo' : '';
   const ok = state === 'ok';
   return `<div class="group" id="remind">
     <div class="row"><span><b>${T('remindT')}</b><br><small style="color:var(--muted)">${T(hint || 'remindD')}</small></span>
       <button class="switch" role="switch" data-act="remind" aria-checked="${ok && R.on}" aria-label="${T('remindT')}" ${ok && !remindBusy ? '' : 'disabled'}></button></div>
     ${ok && R.on ? `<div class="row" style="flex-direction:column;align-items:stretch;gap:8px"><b>${T('remindTime')}</b>
-      <div class="seg" role="group" aria-label="${T('remindTime')}">${PUSH_TIMES.map(t => `<button data-act="remindtime" data-v="${t}" aria-pressed="${R.time === t}" ${remindBusy ? 'disabled' : ''}>${t}</button>`).join('')}</div></div>` : ''}
+      <div class="wheel" role="group" aria-label="${T('remindTime')}" data-time="${time}" aria-busy="${remindBusy}">${wheelCol('h', WHEEL_H, time.slice(0, 2))}<b class="wheel-colon">:</b>${wheelCol('m', WHEEL_M, time.slice(3))}</div></div>` : ''}
     ${remindMsg ? `<p class="note" role="status" style="margin:0">${T(remindMsg)}</p>` : ''}
   </div>`;
 }
 async function reminderDo(fn) {
   remindBusy = true; remindMsg = ''; render();
   try { await fn(); } catch (e) { remindMsg = e.message === 'denied' ? 'remindDenied' : e.message === 'off' ? 'remindOff' : 'remindErr'; }
-  remindBusy = false; render();
+  remindBusy = false; remindPick = ''; render();
 }
 on('remind', () => reminderDo(() => ((getProfile().remind || {}).on ? disableReminder() : enableReminder((getProfile().remind || {}).time || '19:00'))));
-on('remindtime', v => reminderDo(() => enableReminder(v)));
 
 register('settings', () => {
   const P = getProfile();

@@ -5,11 +5,18 @@
  * When you publish a new version: bump CACHE and keep SHELL in sync with the files
  * (README → "Обновление версии").
  */
-const CACHE = 'e4u-v8';
-const SHELL = ['./', './css/app.css', './css/fonts.css', './fonts/Manrope-Variable.ttf', './fonts/OFL-Manrope.txt', './fonts/OFL-Unbounded.txt', './fonts/Unbounded-Variable.ttf', './icons/favicon-32.png', './icons/icon-192.png', './icons/icon-512.png', './index.html', './js/config.js', './js/core/errors.js', './js/core/i18n.js', './js/core/push.js', './js/core/router.js', './js/core/sound.js', './js/core/speech.js', './js/core/store.js', './js/core/ui.js', './js/core/util.js', './js/games/engine.js', './js/main.js', './js/pwa.js', './js/screens/admin.js', './js/screens/grammar-data.js', './js/screens/grammar.js', './js/screens/privacy.js', './js/screens/report.js', './js/screens/screens.js', './js/screens/stats.js', './js/screens/tournament.js', './js/sections/adj/data.js', './js/sections/adj/index.js', './js/sections/adj/strings.js', './js/sections/daily/index.js', './js/sections/daily/strings.js', './js/sections/nouns/data.js', './js/sections/nouns/index.js', './js/sections/nouns/strings.js', './js/sections/nums/data.js', './js/sections/nums/index.js', './js/sections/nums/strings.js', './js/sections/phrases/data.js', './js/sections/phrases/index.js', './js/sections/phrases/strings.js', './js/sections/pron/data.js', './js/sections/pron/index.js', './js/sections/pron/strings.js', './js/sections/registry.js', './js/sections/verbs/data.js', './js/sections/verbs/index.js', './js/sections/verbs/strings.js', './manifest.webmanifest'];
+const CACHE = 'e4u-v9';
+const SHELL = ['./', './css/app.css', './css/fonts.css', './fonts/Manrope-Variable.woff2', './fonts/OFL-Manrope.txt', './fonts/OFL-Unbounded.txt', './fonts/Unbounded-Variable.woff2', './icons/favicon-32.png', './icons/icon-192.png', './icons/icon-512.png', './index.html', './js/config.js', './js/core/errors.js', './js/core/i18n.js', './js/core/push.js', './js/core/router.js', './js/core/sound.js', './js/core/speech.js', './js/core/store.js', './js/core/ui.js', './js/core/util.js', './js/games/engine.js', './js/main.js', './js/pwa.js', './js/screens/admin.js', './js/screens/grammar-data.js', './js/screens/grammar.js', './js/screens/privacy.js', './js/screens/report.js', './js/screens/screens.js', './js/screens/stats.js', './js/screens/tournament.js', './js/sections/adj/data.js', './js/sections/adj/index.js', './js/sections/adj/strings.js', './js/sections/daily/index.js', './js/sections/daily/strings.js', './js/sections/nouns/data.js', './js/sections/nouns/index.js', './js/sections/nouns/strings.js', './js/sections/nums/data.js', './js/sections/nums/index.js', './js/sections/nums/strings.js', './js/sections/phrases/data.js', './js/sections/phrases/index.js', './js/sections/phrases/strings.js', './js/sections/pron/data.js', './js/sections/pron/index.js', './js/sections/pron/strings.js', './js/sections/registry.js', './js/sections/verbs/data.js', './js/sections/verbs/index.js', './js/sections/verbs/strings.js', './manifest.webmanifest'];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  // The sign-in with a code has ended (Access answers with its login page; /sw.js itself is open, see README): no new
+  // files can come. The old cache is cleared then, so the next start shows the login page instead of the stored app.
+  // The progress stays (it is in localStorage, not in this cache).
+  const ended = () => fetch('./', { redirect: 'manual', cache: 'no-store' }).then(r => r.type === 'opaqueredirect', () => false);
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).catch(async err => {
+    if (!(await ended())) throw err;
+    await Promise.all((await caches.keys()).filter(k => k !== 'e4u-push').map(k => caches.delete(k)));
+  }).then(() => self.skipWaiting()));
 });
 self.addEventListener('activate', e => {
   // old app caches go; 'e4u-push' (the reminder text, www/js/core/push.js) stays

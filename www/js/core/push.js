@@ -11,7 +11,8 @@
 import { getProfile, save } from './store.js';
 import { T } from './i18n.js';
 
-export const TIMES = ['17:00', '18:00', '19:00', '20:00', '21:00'];  // the same as worker/push.js
+// 06:00 … 23:45 every 15 minutes (the reminders are sent by a cron that runs every 15 minutes)  (the same as worker/push.js)
+export const TIMES = Array.from({ length: 18 * 4 }, (_, i) => `${String(6 + (i >> 2)).padStart(2, '0')}:${String((i & 3) * 15).padStart(2, '0')}`);
 const TEXT_CACHE = 'e4u-push', TEXT_URL = '/push-text';
 const isIOS = () => /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const standalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;

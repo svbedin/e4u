@@ -1,17 +1,20 @@
 /*!
  * E4U — fonts bundled with the app (work offline, no requests to Google)
  * Manrope and Unbounded: SIL Open Font License 1.1, see fonts/OFL-*.txt
+ * WOFF2 with only the alphabets the app needs (Latin with the Slovak and Spanish letters, Cyrillic, punctuation, arrows):
+ * 158 KB instead of 943 KB. The full fonts are in fonts-src/ (also for the PDF guides); to rebuild after adding a script:
+ *   python -m fontTools.subset fonts-src/Manrope-Variable.ttf --unicodes="U+0020-007E,U+00A0-017F,U+0300-036F,U+0400-04FF,U+2000-206F,U+20AC,U+2122,U+2190-21FF" --flavor=woff2 --layout-features='*' --output-file=www/fonts/Manrope-Variable.woff2
  */
 @font-face {
   font-family: "Manrope";
-  src: url("../fonts/Manrope-Variable.ttf") format("truetype");
+  src: url("../fonts/Manrope-Variable.woff2") format("woff2");
   font-weight: 200 800;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Unbounded";
-  src: url("../fonts/Unbounded-Variable.ttf") format("truetype");
+  src: url("../fonts/Unbounded-Variable.woff2") format("woff2");
   font-weight: 200 900;
   font-style: normal;
   font-display: swap;

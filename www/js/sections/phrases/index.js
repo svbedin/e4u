@@ -38,6 +38,7 @@ export const DIALOGS = DRAW.map(([topic, line, reply, wrong, ru, uk, sk]) =>
 const tr = P => P.t[getLang()] || '';
 const PROPER = /^(I|I’m|I’d|I’ve|Peter|Anna|Tom|Max|Everest|London|Bratislava|Ukraine|Slovakia|English|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)$/;
 // topics 1–10 are A1, in the order of the coursebooks' units; topics from A2_TOPIC on are A2 — asked only at the A2 level (home screen)
+let topicsOpen = false;  // the topic chips in the section menu are folded until opened
 export const TOPICS = [...new Set(RAW.map(r => r[0]))];
 const A2_TOPIC = 11;
 const levelOk = x => getProfile().level === 'a2' || x.topic < A2_TOPIC;
@@ -67,17 +68,25 @@ function pick(st, review, prev, due, ok = () => true, seen) {
 /** The phrase on the card: gaps before k are filled in, gap k is the one to answer (highlighted; typing shows in it),
  *  the gaps after it wait, greyed out. */
 function phraseHTML(P, k) {
-  let n = -1;
-  return `<div class="phrase">${fill(P.parts, g => {
+  let n = -1, html = '';
+  const gapHTML = g => {
     n++;
     if (n < k) return `<span class="gap done">${esc(g.a)}</span>`;
     const hint = g.h ? `<small>${esc(g.h)}</small>` : '';
     return n === k ? `<span class="gap cur"><span id="gapcur">&nbsp;</span>${hint}</span>` : `<span class="gap later">…${hint}</span>`;
-  })}</div>`;
+  };
+  // the word before a gap and the punctuation right after it are glued to it ("s ___." moves to the next line whole)
+  P.parts.forEach((p, i) => {
+    if (typeof p === 'string') { html += i && typeof P.parts[i - 1] !== 'string' ? p.replace(/^\S+/, '') : p; return; }
+    const before = html.match(/([^\s>]+ ?)$/), next = P.parts[i + 1], after = typeof next === 'string' ? (next.match(/^\S+/) || [''])[0] : '';
+    if (before) html = html.slice(0, -before[1].length);
+    html += `<span class="nw">${before ? before[1] : ''}${gapHTML(p)}${after}</span>`;
+  });
+  return `<div class="phrase">${html}</div>`;
 }
 
 const base = (P, isDue, chipKey) => ({
-  _raw: P, key: P.key, due: isDue, chips: [{ label: T(chipKey), kind: 'ghost' }], title: tr(P) || '—', subtitle: '', say: '',
+  _raw: P, key: P.key, due: isDue, chips: [{ label: T(chipKey), kind: 'ghost' }], title: tr(P) || '', subtitle: '', say: '',
   display: P.full, mistake: { text: tr(P) || P.full, form: P.full },
 });
 
@@ -179,13 +188,14 @@ export default {
 
   normalize(st) { st.topics = (st.topics || []).filter(t => TOPICS.includes(t)); },
 
-  // the lessons' topics: none picked = all of them; a tap picks or unpicks one
+  // the lessons' topics: none picked = all of them; a tap picks or unpicks one. Folded: one row with what is picked
   settingsHTML(st) {
     const on = st.topics.filter(t => levelTopics().includes(t));
     const chip = t => `<button class="chip" data-act="phrases:topic" data-v="${t}" aria-pressed="${on.includes(t)}">${t}. ${T('phTopic' + t)}${
       t >= A2_TOPIC ? ' <small class="lvl-tag">A2</small>' : ''}</button>`;
-    return `<div class="group"><span class="label">${T('phTopics')}</span><div class="chips">`
-      + `<button class="chip" data-act="phrases:topic" data-v="0" aria-pressed="${!on.length}">${T('phAll')}</button>${levelTopics().map(chip).join('')}</div></div>`;
+    return `<div class="group"><button class="fold" data-act="phrases:fold" aria-expanded="${topicsOpen}"><span class="label">${T('phTopics')}</span>`
+      + `<b>${on.length ? on.slice().sort((a, b) => a - b).join(', ') : T('phAll')}</b></button>${topicsOpen ? '<div class="chips">'
+      + `<button class="chip" data-act="phrases:topic" data-v="0" aria-pressed="${!on.length}">${T('phAll')}</button>${levelTopics().map(chip).join('')}</div>` : ''}</div>`;
   },
 
   init({ on, st, save, rerender }) {
@@ -194,6 +204,7 @@ export default {
       if (!t) s.topics = []; else if (i >= 0) s.topics.splice(i, 1); else s.topics.push(t);
       save(); rerender();
     });
+    on('phrases:fold', () => { topicsOpen = !topicsOpen; rerender(); });
   },
 
   summary() { return `${T('phN')}: <b>${PHRASES.filter(levelOk).length}</b> · ${T('phDlgN')}: <b>${DIALOGS.filter(levelOk).length}</b> · ${getProfile().level === 'a2' ? 'A1–A2' : 'A1'}`; },

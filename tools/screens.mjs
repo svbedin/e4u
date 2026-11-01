@@ -151,6 +151,8 @@ try {
     await click('[data-act="go"][data-v="hub:verbs"]');
     // nouns
     await click('[data-act="go"][data-v="home"]'); await click('[data-act="go"][data-v="hub:nouns"]'); await shot(p + '05-hub-nouns');
+    check('существительные: уроки свёрнуты', await js(`document.querySelectorAll('[data-act="nouns:unit"]').length`) === 0);
+    await click('[data-act="nouns:fold"]');
     check('существительные: «Все слова» и 10 уроков', await js(`document.querySelectorAll('[data-act="nouns:unit"]').length`) === 11);
     await click('[data-act="nouns:unit"][data-v="3"]');
     check('существительные: урок 3 выбран', await js(`document.querySelector('[data-act="nouns:unit"][data-v="3"]').getAttribute('aria-pressed')`) === 'true');
@@ -183,6 +185,8 @@ try {
     // phrases: every mode, the dictation too (there is an English voice)
     await click('[data-act="go"][data-v="home"]'); await click('[data-act="go"][data-v="hub:phrases"]'); await shot(p + '08-hub-phrases');
     // the lessons' topics: 10 at A1 and "all"; picking one shows it pressed, "all" unpicks it
+    check('фразы: темы свёрнуты', await js(`document.querySelectorAll('[data-act="phrases:topic"]').length`) === 0);
+    await click('[data-act="phrases:fold"]');
     check('фразы: «Все темы» и 10 тем A1', await js(`document.querySelectorAll('[data-act="phrases:topic"]').length`) === 11);
     await click('[data-act="phrases:topic"][data-v="2"]'); await shot(p + '08b-hub-phrases-topic');
     check('фразы: тема 2 выбрана', await js(`document.querySelector('[data-act="phrases:topic"][data-v="2"]').getAttribute('aria-pressed')`) === 'true');

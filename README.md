@@ -27,6 +27,8 @@
      его вписать в `wrangler.jsonc` → `ACCESS_AUD`.
    - **Ещё одно приложение — для установки на Android:** `E4U — значок`, адреса `e4u.slovko.win/manifest.webmanifest`
      и `e4u.slovko.win/icons/*`, политика **Open for all** (уже есть со Slovko — выбрать в «Add existing policy»).
+     С 0.9.0 там же `e4u.slovko.win/sw.js`: без него установленное приложение с закончившимся входом не получает
+     новых версий и не показывает страницу входа (кнопка «Войти по коду» — в самом приложении).
 3. **Секреты сервера** (каждая команда спросит значение — вставить, Enter; на экран не выводится):
    ```
    npx wrangler secret put CF_API_TOKEN     (тот же токен, что у Slovko: Access — Apps and Policies — Edit)

@@ -1,6 +1,6 @@
 {
   "name": "e4u",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "private": true,
   "description": "E4U — easy for you, English for you: an English trainer",
   "author": "Serg",
@@ -14,7 +14,8 @@
     "screens": "node tools/screens.mjs",
     "screens:quick": "node tools/screens.mjs --quick",
     "deploy": "wrangler deploy",
-    "vapid": "node tools/vapid.mjs"
+    "vapid": "node tools/vapid.mjs",
+    "devices": "node tools/devices.mjs"
   },
   "devDependencies": {
     "wrangler": "^4.152.0"

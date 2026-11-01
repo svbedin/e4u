@@ -6,6 +6,7 @@
  * the game itself is served as static files from www/.
  *
  * GET    /api/me        → { email, admin }
+ * GET    /api/signin    → 302 to the app (the "Sign in with a code" button: Access asks for the code on the way)
  * GET    /api/testers   → { emails, admins, langs, limit }          (admin only)
  * POST   /api/testers   { email, lang } → add to the Access policy   (admin only)
  * DELETE /api/testers   { email, lang } → remove                      (admin only)
@@ -55,6 +56,8 @@ async function api(request, env, path) {
   const { email } = id;
   const admin = admins(env).includes(email);
   if (path === '/api/me') { await touch(env, id); return json({ email, admin }); }
+  // "Sign in with a code" (www/js/screens/admin.js): Access has just shown its login page; back to the app
+  if (path === '/api/signin') { await touch(env, id); return Response.redirect(new URL('/', request.url).href, 302); }
   // a custom header cannot be sent cross-site without CORS, which this API never allows
   if (request.method !== 'GET' && request.headers.get('X-E4U') !== '1') return json({ error: 'forbidden' }, 403);
   if (path === '/api/feedback') return feedback(request, env, email);

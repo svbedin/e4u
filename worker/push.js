@@ -17,7 +17,8 @@
  * POST /api/push/unsubscribe { endpoint }                              → deleted
  * Keys: VAPID_PUBLIC (wrangler.jsonc vars, public), VAPID_PRIVATE (secret, a JWK; `npm run vapid` makes both).
  */
-export const TIMES = ['17:00', '18:00', '19:00', '20:00', '21:00'];
+// 06:00 … 23:45 every 15 minutes (the reminders are sent by a cron that runs every 15 minutes)
+export const TIMES = Array.from({ length: 18 * 4 }, (_, i) => `${String(6 + (i >> 2)).padStart(2, '0')}:${String((i & 3) * 15).padStart(2, '0')}`);
 const MAX_SUBS = 1000, LATE_MS = 3 * 3600e3, MAX_FAILS = 5, DAY_MS = 86400e3, SOON_AT = 10 * 60;
 // only the push services of the browsers: an endpoint elsewhere is refused (the server must not call arbitrary addresses)
 const PUSH_HOST = /(^|\.)(fcm\.googleapis\.com|push\.services\.mozilla\.com|push\.apple\.com|notify\.windows\.com)$/;

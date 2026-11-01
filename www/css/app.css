@@ -107,6 +107,23 @@ h2{font-size:18px}
 .seg button[aria-pressed="true"]{background:var(--soft);color:var(--accent)}
 .seg button.later{opacity:.5;cursor:default;font-weight:600}
 .seg button.later small{font-size:10px;font-weight:600;text-transform:lowercase}
+/* a folded list of chips (the lessons' topics): one row with what is picked, a tap opens the chips */
+.fold{display:flex;width:100%;align-items:center;gap:8px;text-align:left;padding:12px 14px;min-height:48px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:12px}
+.fold .label{flex:1;margin:0}
+.fold b{color:var(--accent);font-size:14px;max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fold::after{content:"\25BE";color:var(--muted);transition:transform .2s}
+.fold[aria-expanded="true"]::after{transform:rotate(180deg)}
+.fold + .chips{margin-top:10px}
+/* the reminder time: two wheels (hours, minutes), the middle row is the chosen one */
+.wheel{position:relative;display:flex;justify-content:center;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px 0}
+.wheel::before{content:"";position:absolute;left:12px;right:12px;top:50%;height:44px;margin-top:-22px;background:var(--soft);border-radius:10px;pointer-events:none}
+.wheel[aria-busy="true"]{opacity:.6}
+.wheel-col{position:relative;width:72px;height:132px;overflow-y:auto;scroll-snap-type:y mandatory;padding:44px 0;box-sizing:border-box;scrollbar-width:none;overscroll-behavior:contain;
+  -webkit-mask-image:linear-gradient(transparent,#000 35%,#000 65%,transparent);mask-image:linear-gradient(transparent,#000 35%,#000 65%,transparent)}
+.wheel-col::-webkit-scrollbar{display:none}
+.wheel-col:focus-visible{outline:2px solid var(--accent);border-radius:10px}
+.wheel-item{height:44px;line-height:44px;text-align:center;scroll-snap-align:center;font:700 22px var(--f-body);color:var(--ink);cursor:pointer;font-variant-numeric:tabular-nums}
+.wheel-colon{position:relative;font-size:22px;color:var(--accent)}
 .linkbtn{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:var(--r);border:1.5px dashed var(--line);font-weight:700;color:var(--accent)}
 
 /* game */
@@ -149,8 +166,12 @@ h2{font-size:18px}
 .built{min-height:72px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;padding:10px;border:2px dashed var(--line);border-radius:16px}
 .built .ph{color:var(--muted);font-weight:600}
 .phrase{font-size:clamp(20px,6vw,24px);font-weight:700;line-height:1.6;max-width:100%;overflow-wrap:anywhere}
-.phrase .gap{display:inline-block;min-width:2.6em;padding:0 4px;border-bottom:3px solid var(--accent);color:var(--accent);line-height:1.2}
-.phrase .gap small{display:block;font-size:12px;font-weight:700;color:var(--muted);text-align:center}
+.phrase .gap{position:relative;display:inline-block;min-width:2.6em;padding:0 4px;border-bottom:3px solid var(--accent);color:var(--accent);line-height:1.2}
+/* the hint sits under the frame, out of the line: the frame stays on the line of the words around it */
+.phrase .gap:has(small){padding-bottom:1.15em}
+.phrase .gap small{position:absolute;left:0;right:0;bottom:2px;font-size:12px;font-weight:700;color:var(--muted);text-align:center;white-space:nowrap}
+/* a word before a gap and the punctuation after it go to the next line together with the gap */
+.phrase .nw{white-space:nowrap}
 .phrase .gap.done{border-bottom-color:var(--good);color:var(--good)}
 .phrase .gap.cur{background:var(--soft);border-radius:8px 8px 0 0}
 .phrase .gap.later{border-bottom-style:dashed;border-bottom-color:var(--line);color:var(--muted)}
@@ -202,6 +223,9 @@ h2{font-size:18px}
 .feedback p b{font-size:19px}
 .big{height:56px;border-radius:16px;font-weight:800;font-size:17px;background:var(--accent);color:var(--accent-ink);width:100%}
 .big.ghost{background:var(--surface);color:var(--ink);border:1.5px solid var(--line)}
+/* the sign-in with a code has ended (screens/admin.js): a note with the button under it */
+.note.signin{display:flex;flex-direction:column;gap:10px;margin:0 0 14px;color:var(--ink);border-color:var(--warm);background:var(--warm-soft)}
+.note.signin .big{display:flex;align-items:center;justify-content:center;text-decoration:none}
 
 /* match */
 .match{display:grid;grid-template-columns:1fr 1.4fr;gap:10px}

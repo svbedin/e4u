@@ -43,8 +43,14 @@ export async function checkAdmin() {
     me = r;
     // now the server is known: the tournament card (home), "Testers" and "write to the author" (settings) can appear
     if (['home', 'settings'].includes(currentScreen().name)) render();
-  } catch { /* offline, local server or not signed in: no admin link */ }
+  } catch { /* offline, local server or not signed in: no admin link (an ended sign-in: the banner, see call) */ }
 }
+
+/** The sign-in with a code has ended (7 days): a banner on the home screen. /api/signin is never served from the
+ * offline cache (www/sw.js), so Cloudflare Access shows its page: e-mail → code → back in the app, progress kept. */
+let lost = false;
+export const signinBanner = () => lost
+  ? `<div class="note signin" role="status">${T('signinLost')}<a class="big" href="api/signin">${T('signinBtn')}</a></div>` : '';
 
 /** True when the app runs behind the server (published version), so reports can be sent. */
 export const signedIn = () => !!me;
@@ -66,7 +72,10 @@ export async function call(method, path, body) {
     body: body ? JSON.stringify(body) : undefined,
   });
   // Access sends an expired session to its login page
-  if (res.type === 'opaqueredirect' || res.status === 401) throw new Error('auth');
+  if (res.type === 'opaqueredirect' || res.status === 401) {
+    if (!lost) { lost = true; if (currentScreen().name === 'home') render(); }
+    throw new Error('auth');
+  }
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || 'server');
   return data;
