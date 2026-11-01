@@ -1,5 +1,12 @@
 # История версий E4U
 
+## 0.11.0 — 01.11.2026
+
+- **Прилагательные A2:** 150 (было 103) — 47 слов из списка слов A2: tiny / huge, tidy / messy, soft / hard,
+  smooth / rough, calm / nervous, lazy / hard-working, possible / impossible, public / private, real / fake,
+  similar / different, sweet, salty, sour, fresh, honest, brave, shy, kind, pretty, handsome и другие.
+  Почти синонимы с одним переводом засчитываются оба: terrible = awful, quick = fast, sick = ill, excellent = brilliant.
+
 ## 0.10.0 — 01.11.2026
 
 Слова A2 по списку слов уровня A2 (из него взяты только слова и темы; переводы свои). Видны при уровне A2.
