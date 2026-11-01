@@ -1,5 +1,12 @@
 # История версий E4U
 
+## 1.2.0 — 01.11.2026
+
+- **«Мой учебник»: уроки 7 и 8 Complete Key for Schools.** Урок 7 «Let’s go to the museum»: здания, как пройти
+  (turn left, roundabout, crossing), прилагательные о городе, Past Simple (went, bought, didn’t see, was / were),
+  повелительное наклонение (Turn left! Don’t be late!). Урок 8 «Did you get my message?»: техника, upload / download /
+  check / send, Past Continuous (I was sleeping when …), can / could. Готовы уроки 1–8, уроки 9–14 — «скоро».
+
 ## 1.1.0 — 01.11.2026
 
 - **«Мой учебник»: уроки 5 и 6 Complete Key for Schools.** Урок 5 «It’s my favourite sport!»: виды спорта, play / do / go,

@@ -14,18 +14,18 @@ import { esc } from './util.js';
 import { on, render, currentScreen } from './router.js';
 
 export const NEWS = {
-  v: '1.1.0',
+  v: '1.2.0',
   ru: [
-    "Мой учебник: уроки 5 и 6 Complete Key for Schools — спорт, сравнение, at / in / on, школа, have to, me / him / them.",
-    "Готовы уроки 1–6.",
+    "Мой учебник: уроки 7 и 8 Complete Key for Schools — город и дорога, Past Simple, Turn left!, техника, Past Continuous, can / could.",
+    "Готовы уроки 1–8.",
   ],
   sk: [
-    "Moja učebnica: lekcie 5 a 6 Complete Key for Schools — šport, stupňovanie, at / in / on, škola, have to, me / him / them.",
-    "Hotové sú lekcie 1–6.",
+    "Moja učebnica: lekcie 7 a 8 Complete Key for Schools — mesto a cesta, Past Simple, Turn left!, technika, Past Continuous, can / could.",
+    "Hotové sú lekcie 1–8.",
   ],
   uk: [
-    "Мій підручник: уроки 5 і 6 Complete Key for Schools — спорт, порівняння, at / in / on, школа, have to, me / him / them.",
-    "Готові уроки 1–6.",
+    "Мій підручник: уроки 7 і 8 Complete Key for Schools — місто й дорога, Past Simple, Turn left!, техніка, Past Continuous, can / could.",
+    "Готові уроки 1–8.",
   ],
 };
 
