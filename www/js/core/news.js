@@ -14,21 +14,18 @@ import { esc } from './util.js';
 import { on, render, currentScreen } from './router.js';
 
 export const NEWS = {
-  v: '1.0.0',
+  v: '1.1.0',
   ru: [
-    "E4U 1.0: уровни A1 и A2 собраны целиком.",
-    "Фразовые глаголы (put on, look for, get off) и связки (because, although, until) — новые темы фраз A2.",
-    "Мой учебник: Complete Key for Schools, уроки 1–4 — слова и грамматика урока.",
+    "Мой учебник: уроки 5 и 6 Complete Key for Schools — спорт, сравнение, at / in / on, школа, have to, me / him / them.",
+    "Готовы уроки 1–6.",
   ],
   sk: [
-    "E4U 1.0: úrovne A1 a A2 sú kompletné.",
-    "Frázové slovesá (put on, look for, get off) a spojky (because, although, until) — nové témy fráz A2.",
-    "Moja učebnica: Complete Key for Schools, lekcie 1–4 — slovíčka a gramatika lekcie.",
+    "Moja učebnica: lekcie 5 a 6 Complete Key for Schools — šport, stupňovanie, at / in / on, škola, have to, me / him / them.",
+    "Hotové sú lekcie 1–6.",
   ],
   uk: [
-    "E4U 1.0: рівні A1 і A2 зібрано повністю.",
-    "Фразові дієслова (put on, look for, get off) і сполучники (because, although, until) — нові теми фраз A2.",
-    "Мій підручник: Complete Key for Schools, уроки 1–4 — слова й граматика уроку.",
+    "Мій підручник: уроки 5 і 6 Complete Key for Schools — спорт, порівняння, at / in / on, школа, have to, me / him / them.",
+    "Готові уроки 1–6.",
   ],
 };
 

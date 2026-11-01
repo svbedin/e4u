@@ -1,5 +1,12 @@
 # История версий E4U
 
+## 1.1.0 — 01.11.2026
+
+- **«Мой учебник»: уроки 5 и 6 Complete Key for Schools.** Урок 5 «It’s my favourite sport!»: виды спорта, play / do / go,
+  сравнение (faster, the most popular, the best), предлоги времени at / in / on, национальности. Урок 6 «Have you got any
+  homework?»: школьные предметы и вещи, learn / teach / study / pass / fail, have to / don’t have to, me / him / them.
+  Готовы уроки 1–6, уроки 7–14 — «скоро».
+
 ## 1.0.0 — 01.11.2026
 
 Первая полная версия: уровни A1 и A2 собраны целиком.
