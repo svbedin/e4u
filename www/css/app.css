@@ -226,6 +226,9 @@ h2{font-size:18px}
 /* the sign-in with a code has ended (screens/admin.js): a note with the button under it */
 .note.signin{display:flex;flex-direction:column;gap:10px;margin:0 0 14px;color:var(--ink);border-color:var(--warm);background:var(--warm-soft)}
 .note.signin .big{display:flex;align-items:center;justify-content:center;text-decoration:none}
+/* what is new in this version (core/news.js): once after an update */
+.note.news{display:flex;flex-direction:column;gap:8px;margin:0 0 14px;color:var(--ink);border-color:var(--accent);background:var(--soft)}
+.note.news ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px}
 
 /* match */
 .match{display:grid;grid-template-columns:1fr 1.4fr;gap:10px}

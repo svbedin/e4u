@@ -123,7 +123,7 @@ try {
   async function run(theme, lang) {
     console.log(`${theme === 'light' ? 'светлая' : 'тёмная'} тема, ${lang}`);
     await cdp('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: theme }] });
-    await cdp('Page.navigate', { url: URL0 }); await sleep(1200);
+    await cdp('Page.navigate', { url: URL0 }); await sleep(1700);  // + 0.5 s: taps in the first 0.3 s on a new screen do not count (core/router.js)
     // the interface language is chosen in the settings
     await click('[data-act="go"][data-v="settings"]');
     check('настройки: три языка интерфейса', await js(`document.querySelectorAll('[data-act="lang"]').length`) === 3);
@@ -133,10 +133,10 @@ try {
     await shot(p + '01b-settings');
     check('выбор голоса: из трёх голосов показаны два — женский и мужской', await js(`document.querySelectorAll('[data-act="voice"]').length`) === 2);
     await click('[data-act="go"][data-v="home"]'); await shot(p + '01-home');
-    check('главная: глаголы, существительные, прилагательные, местоимения, числа, фразы', await js(`['hub:verbs','hub:nouns','hub:adj','hub:pron','hub:nums','hub:phrases'].every(v => document.querySelector('[data-v="'+v+'"]'))`));
+    check('главная: глаголы, существительные, прилагательные, местоимения, числа, фразы', await js(`['hub:book','hub:verbs','hub:nouns','hub:adj','hub:pron','hub:nums','hub:phrases'].every(v => document.querySelector('[data-v="'+v+'"]'))`));
     check('главная: «Тренировка дня» и «Грамматика»', await js(`!!document.querySelector('[data-v="daily:daily"]') && !!document.querySelector('.screen > [data-v="grammar"]')`));
     if (lang !== 'ru') {  // the other languages: the menus only
-      for (const s of ['verbs', 'nouns', 'adj', 'pron', 'nums', 'phrases']) { await click(`[data-act="go"][data-v="hub:${s}"]`); await shot(`${p}02-hub-${s}`); await click('[data-act="go"][data-v="home"]'); }
+      for (const s of ['book', 'verbs', 'nouns', 'adj', 'pron', 'nums', 'phrases']) { await click(`[data-act="go"][data-v="hub:${s}"]`); await shot(`${p}02-hub-${s}`); await click('[data-act="go"][data-v="home"]'); }
       return;
     }
     // verbs: every mode; the typing keyboard has the apostrophe

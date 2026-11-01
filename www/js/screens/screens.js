@@ -11,6 +11,7 @@ import { SECTIONS, getSection, sectionStateOf } from '../sections/registry.js';
 import { installUI } from '../pwa.js';
 import { tournamentCard } from './tournament.js';
 import { adminLink, signinBanner } from './admin.js';
+import { newsCard, updateBar } from '../core/news.js';
 import { APP } from '../config.js';
 import { canSpeak, voiceList } from '../core/speech.js';
 import { writeAuthorLink } from './report.js';
@@ -30,6 +31,8 @@ register('home', () => `<div class="screen">
       <button disabled aria-disabled="true" class="later">B1 <small>${T('soon')}</small></button></div>
     <small style="color:var(--muted)">${T('cefrD')}</small></div>
   ${signinBanner()}
+  ${updateBar()}
+  ${newsCard()}
   ${dailyCard()}
   <div class="cards">${SECTIONS.filter(s => !s.hidden).map(s => s.soon
     ? `<div class="sect soon" aria-disabled="true"><span class="glyph">${s.glyph}</span><span class="grow"><b>${T(s.titleKey)}</b></span><span class="pill">${T('soon')}</span></div>`

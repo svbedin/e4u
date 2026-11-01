@@ -78,7 +78,14 @@ for (const [f, list] of EXAMPLES) for (const [x, want] of list) { const got = f(
 for (let n = 0; n <= 1000000; n += n < 2000 ? 1 : 997) if (!EN.test(N.word(n))) bad('числа', `странное слово для ${n}: «${N.word(n)}»`);
 
 // ---- 2c. adjectives: every row complete, the wrong forms are not right ones ----
-const { ADJ, compWrong, supWrong } = await import('../www/js/sections/adj/data.js');
+const { ADJ, ADV, compWrong, supWrong, advWrong } = await import('../www/js/sections/adj/data.js');
+for (const [a, f] of Object.entries(ADV)) {
+  const A = ADJ.find(x => x.a === a), w = `наречие «${a} → ${f}»`;
+  if (!A) { bad(w, 'нет такого прилагательного'); continue; }
+  if (!EN.test(f) || (!/ly$/.test(f) && !['well', 'fast', 'hard', 'early', 'late'].includes(f))) bad(w, 'проверьте форму');
+  const W = advWrong(A);
+  if (W.includes(f) || W.length < 3) bad(w, 'неверные варианты: верная форма среди них или их мало');
+}
 const as = new Set();
 for (const A of ADJ) {
   const w = `прилагательное «${A.a}»`;
@@ -127,6 +134,22 @@ for (const D of DIALOGS) {
   for (const l of LANGS) if (!String(D.t[l]).includes(' — ')) bad(w, `перевод (${l}) должен быть «реплика — ответ»`);
 }
 
+// ---- 3b. "my coursebook": every unit has words and sentences, each sentence one gap with 2+ wrong options ----
+{
+  const { BOOKS, parseGap } = await import('../www/js/sections/book/data.js');
+  for (const [b, B] of Object.entries(BOOKS)) for (const [n, U] of Object.entries(B.units)) {
+    const w = `учебник ${b}, урок ${n}`;
+    if (!U.words.length || !U.gram.length) bad(w, 'нет слов или грамматики');
+    const seen = new Set();
+    for (const [en, ru, uk, sk] of U.words) { if (seen.has(en)) bad(w, `слово «${en}» дважды`); seen.add(en); meaning(`${w}: «${en}»`, { ru, uk, sk }); }
+    for (const [s, ru, uk, sk] of U.gram) {
+      const g = (s.match(/\{/g) || []).length === 1 ? parseGap(s) : null;
+      if (!g || g.w.length < 2 || g.w.includes(g.a) || new Set(g.w).size !== g.w.length) bad(w, `проверьте пропуск: «${s}»`);
+      meaning(`${w}: «${s}»`, { ru, uk, sk });
+    }
+  }
+}
+
 // ---- 4. every task has its answer among the options, no option twice; at A1 no A2 stage is asked ----
 const SECTIONS = {
   verbs: [(await import('../www/js/sections/verbs/index.js')).default, { stages: [...STAGES], mist: {} }],
@@ -139,6 +162,8 @@ const SECTIONS = {
   pron: [(await import('../www/js/sections/pron/index.js')).default, { stages: ['forms', 'sent', 'refl'], mist: {} }],
   nums: [(await import('../www/js/sections/nums/index.js')).default, { stages: ['n100', 'big', 'ord', 'time', 'date', 'price', 'year'], mist: {} }],
   'phrases-topic': [(await import('../www/js/sections/phrases/index.js')).default, { topics: [2, 11], mist: {} }],
+  book: [(await import('../www/js/sections/book/index.js')).default, { book: 'ket', unit: 2, stages: ['word', 'gram'], mist: {} }],
+  'book-1': [(await import('../www/js/sections/book/index.js')).default, { book: 'ket', unit: 1, stages: ['word', 'gram'], mist: {} }],
 };
 for (const level of ['a1', 'a2']) {
   getProfile().level = level;
@@ -150,12 +175,12 @@ for (const level of ['a1', 'a2']) {
         if (new Set(q.options.map(o => String(o.value).toLowerCase())).size !== q.options.length) bad(`${id} (${mode})`, `повтор варианта: ${q.key}`);
       }
       if (level === 'a1' && id === 'pron' && /self\b|selves\b/.test(q.answer)) bad('местоимения', `myself (A2) спрашивается при уровне A1: ${q.key}`);
-      if (level === 'a1' && id === 'adj' && /^(comp|sup):/.test(q.key)) bad('прилагательные', `сравнение (A2) спрашивается при уровне A1: ${q.key}`);
+      if (level === 'a1' && id === 'adj' && /^(comp|sup|adv):/.test(q.key)) bad('прилагательные', `сравнение и наречия (A2) спрашивается при уровне A1: ${q.key}`);
       if (level === 'a1' && id === 'verbs' && q._raw && A2_STAGES.includes(q._raw.s)) bad('глаголы', `этап A2 «${q._raw.s}» спрашивается при уровне A1`);
       q = q.then ? q.then() : null;
     }
   }
-  for (const id of ['verbs', 'nouns', 'nouns-unit', 'adj', 'pron', 'nums']) { const [S, st] = SECTIONS[id]; const m = S.matchSet(st, {}); if (m.pairs.length < 4) bad(`${id} (пары)`, `пар ${m.pairs.length}`); }
+  for (const id of ['verbs', 'nouns', 'nouns-unit', 'adj', 'pron', 'nums', 'book', 'book-1']) { const [S, st] = SECTIONS[id]; const m = S.matchSet(st, {}); if (m.pairs.length < 4) bad(`${id} (пары)`, `пар ${m.pairs.length}`); }
 }
 
 // ---- 6. translations ----
@@ -169,7 +194,7 @@ function sameKeys(where, dict) {
 const src = await readFile(join(WWW, 'js/core/i18n.js'), 'utf8');
 const start = src.indexOf('const STR = '), end = src.indexOf('\n};', start);
 if (start < 0 || end < 0) bad('core/i18n.js', 'не найден объект STR'); else sameKeys('core/i18n.js', new Function(`return ${src.slice(start + 12, end + 2)}`)());
-for (const s of ['verbs', 'nouns', 'adj', 'pron', 'nums', 'phrases', 'daily']) sameKeys(`sections/${s}/strings.js`, (await import(`../www/js/sections/${s}/strings.js`)).default);
+for (const s of ['verbs', 'nouns', 'adj', 'pron', 'nums', 'phrases', 'daily', 'book']) sameKeys(`sections/${s}/strings.js`, (await import(`../www/js/sections/${s}/strings.js`)).default);
 {
   const { GRAMMAR } = await import('../www/js/screens/grammar-data.js');
   const ids = new Set();
@@ -187,6 +212,14 @@ const shape = l => (PRIVACY[l] || []).map(p => (p.match(/\*\*/g) || []).length).
 for (const l of LANGS) {
   if (!PRIVACY[l] || !PRIVACY[l].length) bad('screens/privacy.js', `нет текста (${l})`);
   else if (shape(l) !== shape('ru')) bad('screens/privacy.js', `абзацы на ${l} не совпадают с русским`);
+}
+
+// ---- "what's new" (core/news.js): this version, every language ----
+{
+  const { NEWS } = await import('../www/js/core/news.js');
+  const { APP } = await import('../www/js/config.js');
+  if (NEWS.v !== APP.version) bad('core/news.js', `«что нового» для версии ${NEWS.v}, а приложение — ${APP.version}: напишите новости этой версии`);
+  for (const l of LANGS) if (!NEWS[l] || !NEWS[l].length || NEWS[l].length !== NEWS[LANGS[0]].length) bad('core/news.js', `нет новостей или их число другое (${l})`);
 }
 
 // ---- result ----

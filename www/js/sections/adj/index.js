@@ -1,11 +1,11 @@
 /*!
- * E4U — section "Adjectives": the meaning, opposites (big — small), the comparative and superlative (A2)
+ * E4U — section "Adjectives": the meaning, opposites (big — small), the comparative and superlative, adverbs (A2)
  * Copyright (c) 2026 Serg. All rights reserved.
  *
  * Implements the section contract described in ARCHITECTURE.md. Every form comes from data.js. A task key is
  * "<stage>:<adjective>" (opp:big), so a mistake comes back in the same stage.
  */
-import { ADJ, compWrong, supWrong } from './data.js';
+import { ADJ, ADV, compWrong, supWrong, advWrong } from './data.js';
 import strings from './strings.js';
 import { T, getLang } from '../../core/i18n.js';
 import { rnd, shuf, esc } from '../../core/util.js';
@@ -13,13 +13,13 @@ import { sayButton } from '../../core/ui.js';
 import { canSpeak } from '../../core/speech.js';
 import { getProfile } from '../../core/store.js';
 
-export const STAGES = ['mean', 'opp', 'comp', 'sup'];
-const A2_STAGES = ['comp', 'sup'];
-const STAGE_KEY = { mean: 'aMean', opp: 'aOpp', comp: 'aComp', sup: 'aSup' };
+export const STAGES = ['mean', 'opp', 'comp', 'sup', 'adv'];
+const A2_STAGES = ['comp', 'sup', 'adv'];
+const STAGE_KEY = { mean: 'aMean', opp: 'aOpp', comp: 'aComp', sup: 'aSup', adv: 'aAdv' };
 const tr = A => A.t[getLang()] || '';
 const levelStages = () => STAGES.filter(s => getProfile().level === 'a2' || !A2_STAGES.includes(s));
 const active = st => { const ss = st.stages.filter(s => levelStages().includes(s)); return ss.length ? ss : ['mean']; };
-const fits = (A, s) => (s === 'opp' ? A.opp.length > 0 : s === 'comp' || s === 'sup' ? A.comp.length > 0 : true);
+const fits = (A, s) => (s === 'opp' ? A.opp.length > 0 : s === 'comp' || s === 'sup' ? A.comp.length > 0 : s === 'adv' ? !!ADV[A.a] : true);
 /** Adjectives of the app-wide language level (home screen): A1 only, or A1 + A2. */
 const inLevel = () => (getProfile().level === 'a1' ? ADJ.filter(A => A.a1) : ADJ);
 const byKey = k => { const [s, a] = k.split(':'); const A = ADJ.find(x => x.a === a); return A && STAGES.includes(s) && fits(A, s) ? { A, s } : null; };
@@ -52,6 +52,8 @@ function task(A, s) {
     const wrong = inLevel().filter(x => x.a !== A.a && !A.opp.includes(x.a) && !x.opp.includes(A.a)).map(x => x.a);
     return { right: A.opp[0], accepted: A.opp, wrong: shuf(wrong).slice(0, 3), title: esc(A.a), q: 'aOppQ', shown: `${esc(A.a)} ↔ ` };
   }
+  // the adverb: how? — slow → slowly, good → well (the adjective is in the subtitle's meaning)
+  if (s === 'adv') return { right: ADV[A.a], accepted: [ADV[A.a]], wrong: shuf(advWrong(A)).slice(0, 3), title: esc(A.a), q: 'aAdvQ', shown: `${esc(A.a)} → ` };
   if (s === 'comp') return { right: A.comp[0], accepted: A.comp, wrong: shuf(compWrong(A)).slice(0, 3), title: esc(A.a), q: 'aCompQ', shown: `${esc(A.a)} → `, after: ' than' };
   return { right: 'the ' + A.sup[0], accepted: A.sup.flatMap(f => ['the ' + f, f]), wrong: shuf(supWrong(A)).slice(0, 3).map(f => 'the ' + f), title: esc(A.a), q: 'aSupQ', shown: `${esc(A.a)} → ` };
 }
@@ -68,6 +70,8 @@ export default {
   normalize(st) {
     st.stages = (st.stages || []).filter(s => STAGES.includes(s));
     if (!st.stages.length) st.stages = [...STAGES];
+    // adverbs (0.12.0) are switched on once for players who chose their stages before they existed
+    if (!st.advOn) { if (!st.stages.includes('adv')) st.stages.push('adv'); st.advOn = true; }
   },
 
   settingsHTML(st) {
@@ -103,7 +107,7 @@ export default {
     const D = (due || []).map(byKey).filter(it => it && it.s === s);
     D.forEach(it => due.splice(due.indexOf(`${s}:${it.A.a}`), 1));
     for (const A of [...D.map(it => it.A), ...shuf(inLevel().filter(x => fits(x, s)))]) {
-      const right = s === 'opp' ? A.opp[0] : s === 'comp' ? A.comp[0] : 'the ' + A.sup[0];
+      const right = s === 'opp' ? A.opp[0] : s === 'comp' ? A.comp[0] : s === 'adv' ? ADV[A.a] : 'the ' + A.sup[0];
       // a word and its opposite are not both on the board (big — small, small — big)
       if (used.has(A.a) || used.has(right) || pairs.length >= 6) continue;
       used.add(A.a); used.add(right);
@@ -123,6 +127,7 @@ export default {
       vl.innerHTML = ADJ.filter(A => !s || A.a.includes(s) || tr(A).toLowerCase().includes(s))
         .map(A => `<details class="v"><summary>${esc(A.a)}${sayButton(A.a)}<span>${esc(tr(A))}</span></summary><div class="tables"><table>
           ${A.comp.length ? `<tr><td>${T('aComp')}</td>${cell(A.comp.join(' / '))}</tr><tr><td>${T('aSup')}</td>${cell('the ' + A.sup.join(' / the '))}</tr>` : ''}
+          ${ADV[A.a] ? `<tr><td>${T('aAdv')}</td>${cell(ADV[A.a])}</tr>` : ''}
           ${A.opp.length ? `<tr><td>${T('aOpp')}</td>${cell(A.opp.join(' / '))}</tr>` : ''}</table></div></details>`).join('');
     };
     q.addEventListener('input', draw); draw();

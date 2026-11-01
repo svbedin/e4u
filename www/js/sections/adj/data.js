@@ -154,6 +154,8 @@ const RAW = [
 ['convenient', 'more convenient', 'most convenient', '-', 'удобный (по времени, месту)', 'зручний (за часом, місцем)', 'vhodný (časom, miestom)', ''],
 ['exhausted', '-', '-', '-', 'измученный', 'виснажений', 'vyčerpaný', ''],
 ['humid', 'more humid', 'most humid', 'dry', 'влажный (о воздухе)', 'вологий (про повітря)', 'vlhký (o vzduchu)', ''],
+['careful', 'more careful', 'most careful', 'careless', 'осторожный, внимательный', 'обережний, уважний', 'opatrný, pozorný', ''],
+['careless', 'more careless', 'most careless', 'careful', 'небрежный, невнимательный', 'недбалий, неуважний', 'nedbalý, nepozorný', ''],
 // colours (no comparison here)
 ['black', '-', '-', 'white', 'чёрный', 'чорний', 'čierny', 'a'],
 ['white', '-', '-', 'black', 'белый', 'білий', 'biely', 'a'],
@@ -172,6 +174,24 @@ const split = s => (s === '-' ? [] : s.split('|'));
 export const ADJ = RAW.map(([a, comp, sup, opp, ru, uk, sk, fl]) => ({
   a, comp: split(comp), sup: split(sup), opp: split(opp), t: { ru, uk, sk }, a1: fl.includes('a'),
 }));
+
+/** Adverbs (A2): how something is done — slow → slowly. Written out: -y → -ily (easy — easily), the irregular good — well,
+ *  and the ones that do not change (fast, hard, early, late). Only adjectives whose adverb is usual at A2. */
+export const ADV = {
+  quick: 'quickly', slow: 'slowly', loud: 'loudly', quiet: 'quietly', careful: 'carefully', careless: 'carelessly',
+  bad: 'badly', beautiful: 'beautifully', polite: 'politely', rude: 'rudely', dangerous: 'dangerously', safe: 'safely',
+  serious: 'seriously', nervous: 'nervously', calm: 'calmly', honest: 'honestly', brave: 'bravely', kind: 'kindly',
+  comfortable: 'comfortably', terrible: 'terribly', wonderful: 'wonderfully', different: 'differently', strong: 'strongly',
+  sad: 'sadly', real: 'really', easy: 'easily', happy: 'happily', angry: 'angrily', lucky: 'luckily', heavy: 'heavily',
+  noisy: 'noisily', good: 'well', fast: 'fast', hard: 'hard', early: 'early', late: 'late',
+};
+/** Adverbs a learner might write: -ly on anything (goodly, fastly), -y kept (easyly), one l too few or too many
+ *  (carefuly, slowlly), the adjective itself, and the traps hardly and lately (they mean something else). */
+export function advWrong(A) {
+  const a = A.a, right = ADV[a];
+  const made = [a + 'ly', a.replace(/y$/, 'yly'), a.replace(/le$/, 'ly'), a.replace(/e$/, 'ly'), a + 'lly', a.replace(/l$/, 'ly'), a + 'ely', a];
+  return [...new Set(made)].filter(f => f !== right);
+}
 
 // a consonant that could be doubled by mistake (cheap — cheapper), not after a double one (small)
 const dbl = (b, end) => (/[bcdfgklmnprstvz]$/.test(b) && !/(.)\1$/.test(b) ? b + b.slice(-1) + end : null);

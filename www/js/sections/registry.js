@@ -12,9 +12,11 @@ import adj from './adj/index.js';
 import pron from './pron/index.js';
 import phrases from './phrases/index.js';
 import daily from './daily/index.js';
+import book from './book/index.js';
 import { sectionState } from '../core/store.js';
 
 export const SECTIONS = [
+  book,     // first: the unit of the coursebook the player is working through now
   verbs,
   nouns,
   adj,

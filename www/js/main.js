@@ -17,6 +17,7 @@ import './screens/screens.js';
 import './games/engine.js';
 import './screens/privacy.js';
 import { checkAdmin } from './screens/admin.js';
+import { initNews } from './core/news.js';
 import './screens/stats.js';
 import './screens/grammar.js';
 
@@ -56,4 +57,5 @@ startRouter('home');
 preferVoice(getProfile().voice);
 initSpeech(() => { if (currentScreen().name !== 'game') render(); });
 checkAdmin();
+initNews();
 window.E4U = { version: APP.version }; // handy when checking which build is deployed
