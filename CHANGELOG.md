@@ -1,5 +1,14 @@
 # История версий E4U
 
+## 1.3.0 — 01.11.2026
+
+- **«Мой учебник»: весь Complete Key for Schools — уроки 9–14.** 9 — кино и театр, предложения (Shall we …?),
+  глагол + -ing / to (enjoy working, want to go), будущее (will, Present Continuous, Present Simple по расписанию);
+  10 — погода, времена года, природа, going to, must / mustn’t; 11 — тело, болезни, первое условное (If it rains, …),
+  someone / anything / nothing; 12 — транспорт, drive / ride / fly, Present Perfect (Have you ever …?), should / shouldn’t;
+  13 — хобби, профессии, for / since, наречия (slowly, well), may / might; 14 — общение (argue, persuade), -ed / -ing
+  (bored / boring), just / already / yet, предлоги. Готовы все 14 уроков.
+
 ## 1.2.0 — 01.11.2026
 
 - **«Мой учебник»: уроки 7 и 8 Complete Key for Schools.** Урок 7 «Let’s go to the museum»: здания, как пройти
