@@ -1,5 +1,17 @@
 # История версий E4U
 
+## 0.10.0 — 01.11.2026
+
+Слова A2 по списку слов уровня A2 (из него взяты только слова и темы; переводы свои). Видны при уровне A2.
+
+- **Существительные:** 486 слов (было 363) — 6 новых уроков: 18 «Тело и здоровье» (nose, knee, cough, sore throat,
+  appointment), 19 «Покупки и деньги» (price, discount, cash, change, refund), 20 «Город» (corner, crossroads, traffic
+  light, post office), 21 «Работа и учёба» (salary, interview, deadline, exam, homework), 22 «Дом» (wall, ceiling,
+  wardrobe, pillow, toothbrush), 23 «Аэропорт и вокзал» (passport, boarding pass, luggage, delay, customs).
+- **Глаголы:** 177 (было 143) — 34 глагола A2: invite, explain, believe, receive, stay, laugh, cry, smile, shout,
+  save, relax, pack, explore, deliver, afford, recover, hurt (hurt — hurt), smell (smelled / smelt), quit (quit — quit),
+  cross, turn, marry и другие.
+
 ## 0.9.0 — 01.11.2026
 
 - **Вход по коду закончился (через 7 дней) — кнопка «Войти по коду»** на главной: страница входа Cloudflare
